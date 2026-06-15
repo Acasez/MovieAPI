@@ -75,12 +75,16 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     // POST: api/Movies
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+    public async Task<ActionResult<Movie>> CreateMovie(MovieCreateDTO movieToCreate)
     {
-        context.Movies.Add(movie);
-        await context.SaveChangesAsync();
+        Movie? movie = mapper.Map<MovieCreateDTO>(movieToCreate);
 
-        return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+        await repository.CreateMovie(movie);
+        await repository.SaveChangesAsync();
+
+        MovieDTO createdMovie = mapper.Map<MovieDTO>(movie);
+
+        return CreatedAtAction("GetMovie", new { id = createdMovie.Id }, createdMovie);
     }
 
     // DELETE: api/Movies/5
