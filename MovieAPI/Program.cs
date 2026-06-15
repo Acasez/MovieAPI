@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieAPI.Data;
 using MovieAPI.Services;
+
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ActorContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ActorContext") ?? throw new InvalidOperationException("Connection string 'ActorContext' not found.")));

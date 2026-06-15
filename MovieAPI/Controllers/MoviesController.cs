@@ -11,10 +11,10 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class MoviesController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
 {
-    // GET: api/Movies
+    // GET: api/Movies //TODO add string? name, string? searchQuery
 
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<MovieDTO>>> GetCities(string? name, string? searchQuery)
+    public async Task<ActionResult<IEnumerable<MovieDTO>>> GetCities()
     {
         IEnumerable<Movie> movies = await repository.GetMoviesAsync();
 

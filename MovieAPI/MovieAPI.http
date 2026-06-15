@@ -15,8 +15,14 @@ POST {{MovieAPI_HostAddress}}/api/movies
 Content-Type: application/json
 
 {
-  "title": "Rogue One",
+  "title": "Your Name",
   "year": "2016",
-  "genre": "Action",
-  "duration": "134"
+  "genre": "Romance",
+  "duration": "107"
 }
+### {
+###   "title": "Rogue One",
+###   "year": "2016",
+###   "genre": "Action",
+###   "duration": "134"
+### }

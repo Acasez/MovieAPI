@@ -8,12 +8,12 @@ public class MovieInfoRepository(MovieAPIContext context)
 {
     public async Task<IEnumerable<Movie>> GetMoviesAsync()
     {
-        return await context.Movies.OrderBy(m => m.Title).ToListAsync();
+        return await context.Movie.OrderBy(m => m.Title).ToListAsync();
     }
 
     internal async Task<Movie?> GetMovieAsync(int movieId)
     {
-        return await context.Movies.Where(c => c.Id == movieId).FirstOrDefaultAsync();
+        return await context.Movie.Where(c => c.Id == movieId).FirstOrDefaultAsync();
     }
 
     internal async Task CreateMovie(Movie movie)
