@@ -1,4 +1,4 @@
-﻿namespace MovieAPI.DataTrransferObjects;
+﻿namespace MovieAPI.DataTransferObjects;
 
 public class MovieDTO
 {

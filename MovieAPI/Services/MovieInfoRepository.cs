@@ -15,4 +15,19 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         return await context.Movies.Where(c => c.Id == movieId).FirstOrDefaultAsync();
     }
+
+    internal async Task CreateMovie(Movie movie)
+    {
+        context.Add(movie);
+    }
+
+    internal void DeleteMovie(Movie movieEntitiy)
+    {
+        context.Remove(movieEntitiy);
+    }
+
+    internal async Task<bool> SaveChangesAsync()
+    {
+        return (await context.SaveChangesAsync() >= 0);
+    }
 }

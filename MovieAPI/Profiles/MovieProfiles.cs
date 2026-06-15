@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using MovieAPI.DataTransferObjects;
+using MovieAPI.Models;
 
 namespace MovieAPI.Profiles;
 
@@ -6,7 +8,7 @@ public class MovieProfiles : Profile
 {
     public MovieProfiles()
     {
-        CreateMap<DataTrransferObjects.MovieCreateDTO, Models.Movie>();
-        CreateMap<Models.Movie, DataTrransferObjects.MovieCreateDTO>();
+        CreateMap<Movie, MovieCreateDTO>();
+        CreateMap<MovieCreateDTO, Movie>();
     }
 }

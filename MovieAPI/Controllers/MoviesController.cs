@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieAPI.Data;
-using MovieAPI.DataTrransferObjects;
+using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
 using MovieAPI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MovieAPI.Controllers;
 
@@ -22,7 +16,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetCities(string? name, string? searchQuery)
     {
-        IEnumerable<Movie>? movies = await repository.GetMoviesAsync();
+        IEnumerable<Movie> movies = await repository.GetMoviesAsync();
 
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }
@@ -44,30 +38,17 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     // PUT: api/Movies/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutMovie(int id, Movie movie)
+    public async Task<IActionResult> UpdateMovie(int movieId, MovieUpdateDTO movie)
     {
-        if (id != movie.Id)
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+
+        if (movieEntity == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
-        context.Entry(movie).State = EntityState.Modified;
-
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!MovieExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        mapper.Map(movie, movieEntity);
+        await repository.SaveChangesAsync();
 
         return NoContent();
     }
@@ -75,9 +56,9 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     // POST: api/Movies
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Movie>> CreateMovie(MovieCreateDTO movieToCreate)
+    public async Task<ActionResult<MovieDTO>> CreateMovie(MovieCreateDTO movieToCreate)
     {
-        Movie? movie = mapper.Map<MovieCreateDTO>(movieToCreate);
+        Movie? movie = mapper.Map<Movie>(movieToCreate);
 
         await repository.CreateMovie(movie);
         await repository.SaveChangesAsync();
@@ -89,22 +70,16 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
     // DELETE: api/Movies/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteMovie(int id)
+    public async Task<IActionResult> DeleteMovie(int movieId)
     {
-        var movie = await context.Movies.FindAsync(id);
-        if (movie == null)
+        Movie? movieEntitiy = await repository.GetMovieAsync(movieId);
+        if (movieEntitiy == null)
         {
             return NotFound();
         }
-
-        context.Movies.Remove(movie);
-        await context.SaveChangesAsync();
+        repository.DeleteMovie(movieEntitiy);
+        await repository.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private bool MovieExists(int id)
-    {
-        return context.Movies.Any(e => e.Id == id);
     }
 }

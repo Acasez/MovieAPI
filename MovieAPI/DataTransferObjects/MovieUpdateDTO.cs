@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieAPI.DataTrransferObjects;
+namespace MovieAPI.DataTransferObjects;
 
 public class MovieUpdateDTO
 {
