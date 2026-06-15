@@ -5,15 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Models;
 
-namespace MovieAPI.Data
-{
-    public class MovieAPIContext : DbContext
-    {
-        public MovieAPIContext (DbContextOptions<MovieAPIContext> options)
-            : base(options)
-        {
-        }
+namespace MovieAPI.Data;
 
-        public DbSet<MovieAPI.Models.Movie> Movie { get; set; } = default!;
-    }
+public class MovieAPIContext(DbContextOptions<MovieAPIContext> options) : DbContext(options)
+{
+    public DbSet<Movie> Movies { get; set; } = default!;
 }
