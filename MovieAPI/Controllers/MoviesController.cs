@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
@@ -22,17 +24,17 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // GET: api/Movies/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<MovieDTO>> GetMovie(int id)
+    [HttpGet("{movieId}")]
+    public async Task<ActionResult<MovieDTO>> GetMovie(int movieId)
     {
-        Movie? city = await repository.GetMovieAsync(id);
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
 
-        if (city == null)
+        if (movieEntity == null)
         {
             return NotFound();
         }
 
-        return Ok(mapper.Map<MovieDTO>(city));
+        return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
 
     // PUT: api/Movies/5
@@ -68,16 +70,51 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction("GetMovie", new { id = createdMovie.Id }, createdMovie);
     }
 
-    // DELETE: api/Movies/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteMovie(int movieId)
+    [HttpPatch("{pointOfInterestId}")]
+    public async Task<ActionResult> PartiallyUpdatePointOfInterest(int movieId, JsonPatchDocument<MovieUpdateDTO> patchDocument)
     {
-        Movie? movieEntitiy = await repository.GetMovieAsync(movieId);
-        if (movieEntitiy == null)
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+
+        if (movieEntity == null)
         {
             return NotFound();
         }
-        repository.DeleteMovie(movieEntitiy);
+
+        MovieUpdateDTO moviePatch = mapper.Map<MovieUpdateDTO>(movieEntity);
+
+        patchDocument.ApplyTo(moviePatch, jsonPathcError =>
+        {
+            string key = jsonPathcError.AffectedObject.GetType().Name;
+            ModelState.AddModelError(key, jsonPathcError.ErrorMessage);
+        });
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (!TryValidateModel(moviePatch))
+        {
+            return BadRequest(ModelState);
+        }
+
+        mapper.Map(moviePatch, movieEntity);
+        await repository.SaveChangesAsync();
+        return NoContent();
+    }
+
+    // DELETE: api/Movies/5
+    [HttpDelete("{movieId}")]
+    public async Task<IActionResult> DeleteMovie(int movieId)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+
+        if (movieEntity == null)
+        {
+            return NotFound();
+        }
+
+        repository.DeleteMovie(movieEntity);
         await repository.SaveChangesAsync();
 
         return NoContent();

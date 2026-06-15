@@ -1,17 +1,17 @@
-@MovieAPI_HostAddress = http://localhost:5259
-@ID = 1
+@baseUrl = http://localhost:5259
+@ID = 3
 
-GET {{MovieAPI_HostAddress}}/weatherforecast/
+GET {{baseUrl}}/weatherforecast/
 Accept: application/json
 
 ###
-GET {{MovieAPI_HostAddress}}/api/movies
+GET {{baseUrl}}/api/movies
 
 ###
-GET {{MovieAPI_HostAddress}}/api/movies/{{id}}
+GET {{baseUrl}}/api/movies/{{id}}
 
 ###
-POST {{MovieAPI_HostAddress}}/api/movies
+POST {{baseUrl}}/api/movies
 Content-Type: application/json
 
 {
@@ -26,3 +26,18 @@ Content-Type: application/json
 ###   "genre": "Action",
 ###   "duration": "134"
 ### }
+
+### Partially update movie (PATCH with JSON Patch - Replace operation)
+PATCH {{baseUrl}}/api/movies/{{id}}
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "replace",
+    "path": "/title",
+    "value": "Rouge One"
+  }
+]
+
+### Delete movie
+DELETE {{baseUrl}}/api/movies/{{id}}
