@@ -1,6 +1,22 @@
 @MovieAPI_HostAddress = http://localhost:5259
+@ID = 1
 
 GET {{MovieAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+GET {{MovieAPI_HostAddress}}/api/movies
+
+###
+GET {{MovieAPI_HostAddress}}/api/movies/{{id}}
+
+###
+POST {{MovieAPI_HostAddress}}/api/movies
+Content-Type: application/json
+
+{
+  "title": "Rogue One",
+  "year": "2016",
+  "genre": "Action",
+  "duration": "134"
+}
