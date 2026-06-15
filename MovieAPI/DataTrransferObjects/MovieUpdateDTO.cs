@@ -2,7 +2,7 @@
 
 namespace MovieAPI.DataTrransferObjects;
 
-public class MovieCreateDTO
+public class MovieUpdateDTO
 {
     [Required]
     [MaxLength(50)]

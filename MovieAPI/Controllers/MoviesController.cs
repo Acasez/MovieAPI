@@ -14,8 +14,6 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class MoviesController(MovieAPIContext context) : ControllerBase
 {
-    private readonly MovieAPIContext context = context;
-
     // GET: api/Movies
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
