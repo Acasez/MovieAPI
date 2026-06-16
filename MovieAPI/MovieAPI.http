@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@ID = 13
+@ID = 4
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
@@ -32,6 +32,17 @@ Content-Type: application/json
 ###   "genre": "Action",
 ###   "duration": "134"
 ### }
+
+### Update movie (full update with PUT)
+PUT {{baseUrl}}/api/movies/{{id}}
+Content-Type: application/json
+
+{
+    "Title": "Pirates of the Caribbean",
+    "Year": 2003,
+    "Genre": "Adventure",
+    "Duration": 143
+}
 
 ### Partially update movie (PATCH with JSON Patch - Replace operation)
 PATCH {{baseUrl}}/api/movies/{{id}}
