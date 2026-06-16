@@ -11,6 +11,9 @@ GET {{baseUrl}}/api/movies
 GET {{baseUrl}}/api/movies/{{id}}
 
 ###
+GET {{baseUrl}}/api/actors
+
+###
 POST {{baseUrl}}/api/movies
 Content-Type: application/json
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
+using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
 using MovieAPI.Services;
 using System;
@@ -14,13 +15,15 @@ namespace MovieAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActorsController(ActorInfoRepository repository, IMapper mapper, ActorContext context) : ControllerBase
+    public class ActorsController(ActorInfoRepository repository, IMapper mapper) : ControllerBase
     {
         // GET: api/Actors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actor>>> GetActor()
+        public async Task<ActionResult<IEnumerable<ActorDTO>>> GetMovies()
         {
-            return await context.Actor.ToListAsync();
+            IEnumerable<Actor> movies = await repository.GetActorsAsync();
+
+            return Ok(mapper.Map<IEnumerable<ActorDTO>>(movies));
         }
 
         // GET: api/Actors/5
