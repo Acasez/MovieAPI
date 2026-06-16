@@ -13,7 +13,7 @@ public class ActorInfoRepository(ActorContext context)
 
     internal async Task<Actor?> GetActorAsync(int actorId)
     {
-        return await context.Actor.Where(c => c.Id == actorId).FirstOrDefaultAsync();
+        return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
     }
 
     internal async Task CreateMovie(Actor actor)

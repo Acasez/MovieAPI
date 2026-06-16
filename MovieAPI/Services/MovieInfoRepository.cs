@@ -13,7 +13,7 @@ public class MovieInfoRepository(MovieAPIContext context)
 
     internal async Task<Movie?> GetMovieAsync(int movieId)
     {
-        return await context.Movie.Where(c => c.Id == movieId).FirstOrDefaultAsync();
+        return await context.Movie.Where(m => m.Id == movieId).FirstOrDefaultAsync();
     }
 
     internal async Task CreateMovie(Movie movie)
