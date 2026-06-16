@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@ID = 3
+@ID = 4
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
@@ -15,11 +15,18 @@ POST {{baseUrl}}/api/movies
 Content-Type: application/json
 
 {
-  "title": "Your Name",
-  "year": "2016",
-  "genre": "Romance",
-  "duration": "107"
+   "title": "Project Hail Mary",
+   "year": "2026",
+   "genre": "Sci-fi",
+   "duration": "156"
 }
+
+### {
+###   "title": "Your Name",
+###   "year": "2016",
+###   "genre": "Romance",
+###   "duration": "107"
+### }
 ### {
 ###   "title": "Rogue One",
 ###   "year": "2016",
@@ -35,7 +42,7 @@ Content-Type: application/json-patch+json
   {
     "op": "replace",
     "path": "/title",
-    "value": "Rouge One"
+    "value": "The curse of the black pearl"
   }
 ]
 

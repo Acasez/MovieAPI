@@ -6,3 +6,9 @@ public class Actor
     public string Name { get; set; }
     public int YearOfBirth { get; set; }
 }
+
+public class MovieActor
+{
+    public int MovieId { get; set; }
+    public int ActorID { get; set; }
+}
