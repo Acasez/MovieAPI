@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
 using MovieAPI.Models;
+using MovieAPI.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActorsController(ActorContext context) : ControllerBase
+    public class ActorsController(ActorInfoRepository repository, IMapper mapper, ActorContext context) : ControllerBase
     {
         // GET: api/Actors
         [HttpGet]

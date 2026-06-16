@@ -69,7 +69,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     [HttpPatch("{movieId}")]
-    public async Task<ActionResult> PartiallyUpdatePointOfInterest(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
+    public async Task<ActionResult> PartiallyUpdateMovie(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
 
@@ -80,10 +80,10 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         MovieUpdateDTO moviePatch = mapper.Map<MovieUpdateDTO>(movieEntity);
 
-        patchDocument.ApplyTo(moviePatch, jsonPathcError =>
+        patchDocument.ApplyTo(moviePatch, jsonPatchError =>
         {
-            string key = jsonPathcError.AffectedObject.GetType().Name;
-            ModelState.AddModelError(key, jsonPathcError.ErrorMessage);
+            string key = jsonPatchError.AffectedObject.GetType().Name;
+            ModelState.AddModelError(key, jsonPatchError.ErrorMessage);
         });
 
         if (!ModelState.IsValid)

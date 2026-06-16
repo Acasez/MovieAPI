@@ -21,13 +21,7 @@ builder.Services.AddScoped<MovieInfoRepository>();
 
 builder.Services.AddAutoMapper(config => { }, AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-    {
-        //options.JsonPatchDocumentSerializerSettings = new JsonSerializerSettings
-        //{
-        //    // Ensure the serializer can handle JSON Patch documents
-        //};
-    });
+builder.Services.AddControllers().AddJsonOptions(options =>{});
 
 WebApplication app = builder.Build();
 
