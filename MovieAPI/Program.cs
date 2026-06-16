@@ -19,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<MovieInfoRepository>();
+builder.Services.AddScoped<ActorInfoRepository>();
 
 builder.Services.AddAutoMapper(config => { }, AppDomain.CurrentDomain.GetAssemblies());
 

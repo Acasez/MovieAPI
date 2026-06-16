@@ -16,12 +16,12 @@ public class ActorInfoRepository(ActorContext context)
         return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
     }
 
-    internal async Task CreateMovie(Actor actor)
+    internal async Task CreateActor(Actor actor)
     {
         context.Add(actor);
     }
 
-    internal void DeleteMovie(Actor actorEntity)
+    internal void DeleteActor(Actor actorEntity)
     {
         context.Remove(actorEntity);
     }

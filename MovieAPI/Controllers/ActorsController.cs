@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
@@ -19,54 +20,41 @@ namespace MovieAPI.Controllers
     {
         // GET: api/Actors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ActorDTO>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<ActorDTO>>> GetActors()
         {
-            IEnumerable<Actor> movies = await repository.GetActorsAsync();
+            IEnumerable<Actor> actors = await repository.GetActorsAsync();
 
-            return Ok(mapper.Map<IEnumerable<ActorDTO>>(movies));
+            return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
         }
 
         // GET: api/Actors/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Actor>> GetActor(int id)
+        [HttpGet("{actorId}")]
+        public async Task<ActionResult<ActorDTO>> GetActor(int actorId)
         {
-            var actor = await context.Actor.FindAsync(id);
+            Actor? actorEntity = await repository.GetActorAsync(actorId);
 
-            if (actor == null)
+            if (actorEntity == null)
             {
                 return NotFound();
             }
 
-            return actor;
+            return Ok(mapper.Map<ActorDTO>(actorEntity));
         }
 
-        // PUT: api/Actors/5
+        // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutActor(int id, Actor actor)
+        [HttpPut("{actorId}")]
+        public async Task<IActionResult> UpdateActor(int actorId, ActorUpdateDTO actor)
         {
-            if (id != actor.Id)
+            Actor? actorEntity = await repository.GetActorAsync(actorId);
+
+            if (actorEntity == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            context.Entry(actor).State = EntityState.Modified;
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ActorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            mapper.Map(actor, actorEntity);
+            await repository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -74,33 +62,65 @@ namespace MovieAPI.Controllers
         // POST: api/Actors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Actor>> PostActor(Actor actor)
+        public async Task<ActionResult<ActorDTO>> CreateActor(ActorCreateDTO actorToCreate)
         {
-            context.Actor.Add(actor);
-            await context.SaveChangesAsync();
+            Actor? actor = mapper.Map<Actor>(actorToCreate);
 
-            return CreatedAtAction("GetActor", new { id = actor.Id }, actor);
+            await repository.CreateActor(actor);
+            await repository.SaveChangesAsync();
+
+            ActorDTO createdActor = mapper.Map<ActorDTO>(actor);
+            return CreatedAtAction("GetActor", new { actorId = createdActor.Id }, createdActor);
         }
 
-        // DELETE: api/Actors/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteActor(int id)
+        [HttpPatch("{actorId}")]
+        public async Task<ActionResult> PartiallyUpdateActor(int actorId, [FromBody] JsonPatchDocument<ActorUpdateDTO> patchDocument)
         {
-            var actor = await context.Actor.FindAsync(id);
-            if (actor == null)
+            Actor? actorEntity = await repository.GetActorAsync(actorId);
+
+            if (actorEntity == null)
             {
                 return NotFound();
             }
 
-            context.Actor.Remove(actor);
-            await context.SaveChangesAsync();
+            ActorUpdateDTO actorPatch = mapper.Map<ActorUpdateDTO>(actorEntity);
 
+            patchDocument.ApplyTo(actorPatch, jsonPatchError =>
+            {
+                string key = jsonPatchError.AffectedObject.GetType().Name;
+                ModelState.AddModelError(key, jsonPatchError.ErrorMessage);
+            });
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(actorPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(actorPatch, actorEntity);
+            await repository.SaveChangesAsync();
             return NoContent();
         }
 
-        private bool ActorExists(int id)
+        // DELETE: api/Actors/5
+        [HttpDelete("{actorId}")]
+        public async Task<IActionResult> DeleteActor(int actorId)
         {
-            return context.Actor.Any(e => e.Id == id);
+            Actor? actorEntity = await repository.GetActorAsync(actorId);
+
+            if (actorEntity == null)
+            {
+                return NotFound();
+            }
+
+            repository.DeleteActor(actorEntity);
+            await repository.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

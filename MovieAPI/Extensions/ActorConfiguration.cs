@@ -21,13 +21,13 @@ public class ActorConfiguration : IEntityTypeConfiguration<Actor>
             {
                 Id = Guid.Parse("d1a7b9c3-4e56-4f89-a123-b456c789d012"),
                 Title = "Johnny Depp",
-                YearOfBirth = new DateTimeOffset(new DateTime(1963, 06, 09), TimeSpan.Zero),
+                YearOfBirth = 1963,
             },
             new
             {
                 Id = Guid.Parse("e2b8c0d4-5f67-4890-b234-c567d890e123"),
                 Title = "Ryan Gosling",
-                YearOfBirth = new DateTimeOffset(new DateTime(1980, 11, 12), TimeSpan.Zero),
+                YearOfBirth = 1963,
             }
         );
     }
