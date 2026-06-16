@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@ID = 4
+@ID = 13
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
@@ -13,7 +13,6 @@ GET {{baseUrl}}/api/movies/{{id}}
 ###
 POST {{baseUrl}}/api/movies
 Content-Type: application/json
-
 {
    "title": "Project Hail Mary",
    "year": "2026",

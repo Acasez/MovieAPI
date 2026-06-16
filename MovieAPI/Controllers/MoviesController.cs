@@ -37,7 +37,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
     // PUT: api/Movies/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
+    [HttpPut("{movieId}")]
     public async Task<IActionResult> UpdateMovie(int movieId, MovieUpdateDTO movie)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
@@ -64,8 +64,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.SaveChangesAsync();
 
         MovieDTO createdMovie = mapper.Map<MovieDTO>(movie);
-
-        return CreatedAtAction("GetMovie", createdMovie.Id, createdMovie);
+        return CreatedAtAction("GetMovie", new { movieId = createdMovie.Id }, createdMovie);
     }
 
     [HttpPatch("{movieId}")]
