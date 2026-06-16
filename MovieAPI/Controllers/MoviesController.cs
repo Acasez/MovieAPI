@@ -69,7 +69,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     [HttpPatch("{movieId}")]
-    public async Task<ActionResult> PartiallyUpdatePointOfInterest(int movieId, JsonPatchDocument<MovieUpdateDTO> patchDocument)
+    public async Task<ActionResult> PartiallyUpdatePointOfInterest(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
 

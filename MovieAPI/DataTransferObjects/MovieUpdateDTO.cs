@@ -10,6 +10,6 @@ public class MovieUpdateDTO
     [Range(1900, 2100)]
     public int? Year { get; set; }
     public string? Genre { get; set; }
-    [Range(1, 1000)] //In minutes
+    [Range(1, 1000)]
     public int? Duration { get; set; }
 }

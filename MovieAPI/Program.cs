@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieAPI.Data;
 using MovieAPI.Services;
+using Newtonsoft.Json;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,14 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<MovieInfoRepository>();
 
 builder.Services.AddAutoMapper(config => { }, AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        //options.JsonPatchDocumentSerializerSettings = new JsonSerializerSettings
+        //{
+        //    // Ensure the serializer can handle JSON Patch documents
+        //};
+    });
 
 WebApplication app = builder.Build();
 
