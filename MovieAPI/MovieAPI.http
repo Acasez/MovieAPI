@@ -27,8 +27,8 @@ Content-Type: application/json
 POST {{baseUrl}}/api/actors
 Content-Type: application/json
 {
-   "name": "Ryan Gosling",
-   "YearOfBirth": "1980"
+   "name": "Johnny Depp",
+   "YearOfBirth": "1963"
 }
 
 ### {
