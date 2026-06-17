@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@ID = 4
+@ID = 9
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
@@ -31,11 +31,12 @@ Content-Type: application/json
    "YearOfBirth": "1963"
 }
 
-POST {{baseUrl}}/api/actors/{{movieID}}
+###
+POST {{baseUrl}}/api/actors/{{id}}
 Content-Type: application/json
 {
-   "name": "Johnny Depp",
-   "YearOfBirth": "1963"
+   "name": "Ryan Gosling",
+   "YearOfBirth": "1992"
 }
 
 ### {
