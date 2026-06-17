@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MovieAPI.Services;
 
-public class ActorInfoRepository(ActorContext context)
+public class ActorInfoRepository(MovieAPIContext context)
 {
     public async Task<IEnumerable<Actor>> GetActorsAsync()
     {
@@ -16,8 +16,12 @@ public class ActorInfoRepository(ActorContext context)
         return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
     }
 
-    internal async Task CreateActor(Actor actor)
+    internal async Task CreateActor(Actor actor, int movieId = 0)
     {
+        if (movieId != 0)
+        {
+            //Add actor/movie connection
+        }
         context.Add(actor);
     }
 
@@ -29,5 +33,10 @@ public class ActorInfoRepository(ActorContext context)
     internal async Task<bool> SaveChangesAsync()
     {
         return (await context.SaveChangesAsync() >= 0);
+    }
+
+    internal async Task<bool> MovieExists(int movieID)
+    {
+        return await context.Movie.AnyAsync(a => a.Id == movieID);
     }
 }

@@ -7,8 +7,6 @@ using Newtonsoft.Json.Serialization;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ActorContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ActorContext") ?? throw new InvalidOperationException("Connection string 'ActorContext' not found.")));
 builder.Services.AddDbContext<MovieAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieAPIContext") ?? throw new InvalidOperationException("Connection string 'MovieAPIContext' not found.")));
 

@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace MovieAPI.Migrations.Actor
+namespace MovieAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Seededtwoactors : Migration
+    public partial class MigratetooneDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,6 +23,22 @@ namespace MovieAPI.Migrations.Actor
                 {
                     table.PrimaryKey("PK_Actor", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Review",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReviewerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Review", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -30,6 +46,9 @@ namespace MovieAPI.Migrations.Actor
         {
             migrationBuilder.DropTable(
                 name: "Actor");
+
+            migrationBuilder.DropTable(
+                name: "Review");
         }
     }
 }
