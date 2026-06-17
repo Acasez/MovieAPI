@@ -29,7 +29,7 @@ public class MovieInfoRepository(MovieAPIContext context)
                 Actor? actor = await context.Actor.FindAsync(actorId);
                 if (actor != null)
                 {
-                    movie.Actor?.Add(actor);
+                    movie.Actors?.Add(actor);
                 }
             }
         }
@@ -75,8 +75,16 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Actor.AnyAsync(a => a.Id == actorId);
     }
 
-    //internal void AddMovieActor(MovieActor movieActor)
-    //{
-    //    context.Add(movieActor);
-    //}
+    internal static void AddActorToMovie(Movie movieEntity, Actor actor)
+    {
+        if (movieEntity.Actors == null)
+        {
+            return;
+        }
+        if (!movieEntity.Actors.Contains(actor))
+        {
+            movieEntity.Actors?.Add(actor);
+        }
+        
+    }
 }

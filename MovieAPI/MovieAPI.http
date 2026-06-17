@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@movieId = 4
+@movieId = 16
 @actorId = 1
 
 GET {{baseUrl}}/weatherforecast/
@@ -28,13 +28,18 @@ Content-Type: application/json
    "actorIds": [2, 4]
 }
 
-###
+### Create Actor
 POST {{baseUrl}}/api/actors
 Content-Type: application/json
 {
-   "name": "Sandra Hüller",
-   "YearOfBirth": "1978"
+   "name": "James Ortiz",
+   "YearOfBirth": "1984"
 }
+
+### Add Actor to Movie
+POST {{baseUrl}}/api/actors/{{movieId}}/actors
+Content-Type: application/json
+[5] // IDs of actors to add
 
 ### {
 ###   "title": "Rogue One",

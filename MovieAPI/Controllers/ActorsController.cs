@@ -68,26 +68,6 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
     }
 
-    //[HttpPost("movies/{movieId}/actors/{actorId}")]
-    //public async Task<IActionResult> AddActorToMovie(int movieId, int actorId)
-    //{
-    //    if (!await repository.MovieExists(movieId) || !await repository.ActorExists(actorId))
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    MovieActor movieActor = new()
-    //    {
-    //        MovieId = movieId,
-    //        ActorId = actorId
-    //    };
-
-    //    repository.AddMovieActor(movieActor);
-    //    await repository.SaveChangesAsync();
-
-    //    return Ok(movieActor);
-    //}
-
     [HttpPatch("{actorId}")]
     public async Task<ActionResult> PartiallyUpdateActor(int actorId, [FromBody] JsonPatchDocument<ActorUpdateDTO> patchDocument)
     {
@@ -136,5 +116,27 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    [HttpPost("{movieId}/actors")]
+    public async Task<IActionResult> AddActorsToMovie(int movieId, List<int> actorIds)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+        if (movieEntity == null)
+        {
+            return NotFound();
+        }
+
+        foreach (int actorId in actorIds)
+        {
+            Actor? actor = await repository.GetActorAsync(actorId);
+            if (actor != null)
+            {
+                MovieInfoRepository.AddActorToMovie(movieEntity,  actor);
+            }
+        }
+
+        await repository.SaveChangesAsync();
+        return Ok(movieEntity);
     }
 }

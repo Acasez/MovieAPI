@@ -8,5 +8,5 @@ public class Movie
     public string Genre { get; set; } = string.Empty;
     //In minutes
     public int Duration { get; set; }
-    public ICollection<Actor>? Actor { get; set; } = [];
+    public ICollection<Actor>? Actors { get; set; } = [];
 }
