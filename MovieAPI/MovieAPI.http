@@ -24,19 +24,18 @@ Content-Type: application/json
    "title": "Project Hail Mary",
    "year": "2026",
    "genre": "Sci-fi",
-   "duration": "156"
+   "duration": "156",
+   "actorIds": [2, 4]
 }
 
 ###
 POST {{baseUrl}}/api/actors
 Content-Type: application/json
 {
-   "name": "Johnny Depp",
-   "YearOfBirth": "1963"
+   "name": "Sandra Hüller",
+   "YearOfBirth": "1978"
 }
 
-### Add actor to movie
-POST {{baseUrl}}/api/movies/{{movieId}}/actors/{{actorId}}
 ### {
 ###   "title": "Rogue One",
 ###   "year": "2016",

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
+using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
 using System.Numerics;
 
@@ -17,9 +18,21 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Movie.Where(m => m.Id == movieId).FirstOrDefaultAsync();
     }
 
-    internal async Task CreateMovie(Movie movie)
+    internal async Task CreateMovie(Movie movie, MovieCreateDTO movieToCreate)
     {
         context.Add(movie);
+
+        if (movieToCreate.ActorIds != null && movieToCreate.ActorIds.Count != 0)
+        {
+            foreach (int actorId in movieToCreate.ActorIds)
+            {
+                Actor? actor = await context.Actor.FindAsync(actorId);
+                if (actor != null)
+                {
+                    movie.Actor?.Add(actor);
+                }
+            }
+        }
     }
 
     internal void DeleteMovie(Movie movieEntitiy)
@@ -47,7 +60,6 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         context.Remove(actorEntity);
     }
-
     
     public async Task<IEnumerable<Actor>> GetActorsAsync()
     {
@@ -63,8 +75,8 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Actor.AnyAsync(a => a.Id == actorId);
     }
 
-    internal void AddMovieActor(MovieActor movieActor)
-    {
-        context.Add(movieActor);
-    }
+    //internal void AddMovieActor(MovieActor movieActor)
+    //{
+    //    context.Add(movieActor);
+    //}
 }

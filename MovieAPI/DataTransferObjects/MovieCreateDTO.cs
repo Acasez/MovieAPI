@@ -18,4 +18,6 @@ public class MovieCreateDTO
 
     [Range(1, 1000)] 
     public int? Duration { get; set; }
+
+    public List<int>? ActorIds { get; set; }
 }

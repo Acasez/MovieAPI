@@ -60,7 +60,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     {
         Movie? movie = mapper.Map<Movie>(movieToCreate);
 
-        await repository.CreateMovie(movie);
+        await repository.CreateMovie(movie, movieToCreate);
         await repository.SaveChangesAsync();
 
         MovieDTO createdMovie = mapper.Map<MovieDTO>(movie);

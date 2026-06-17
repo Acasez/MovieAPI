@@ -68,25 +68,25 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
     }
 
-    [HttpPost("movies/{movieId}/actors/{actorId}")]
-    public async Task<IActionResult> AddActorToMovie(int movieId, int actorId)
-    {
-        if (!await repository.MovieExists(movieId) || !await repository.ActorExists(actorId))
-        {
-            return NotFound();
-        }
+    //[HttpPost("movies/{movieId}/actors/{actorId}")]
+    //public async Task<IActionResult> AddActorToMovie(int movieId, int actorId)
+    //{
+    //    if (!await repository.MovieExists(movieId) || !await repository.ActorExists(actorId))
+    //    {
+    //        return NotFound();
+    //    }
 
-        MovieActor movieActor = new()
-        {
-            MovieId = movieId,
-            ActorId = actorId
-        };
+    //    MovieActor movieActor = new()
+    //    {
+    //        MovieId = movieId,
+    //        ActorId = actorId
+    //    };
 
-        repository.AddMovieActor(movieActor);
-        await repository.SaveChangesAsync();
+    //    repository.AddMovieActor(movieActor);
+    //    await repository.SaveChangesAsync();
 
-        return Ok(movieActor);
-    }
+    //    return Ok(movieActor);
+    //}
 
     [HttpPatch("{actorId}")]
     public async Task<ActionResult> PartiallyUpdateActor(int actorId, [FromBody] JsonPatchDocument<ActorUpdateDTO> patchDocument)
