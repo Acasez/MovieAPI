@@ -75,16 +75,16 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Actor.AnyAsync(a => a.Id == actorId);
     }
 
-    internal static void AddActorToMovie(Movie movieEntity, Actor actor)
+    internal bool AddActorToMovie(Movie movieEntity, Actor actor)
     {
         if (movieEntity.Actors == null)
         {
-            return;
+            return false;
         }
         if (!movieEntity.Actors.Contains(actor))
         {
             movieEntity.Actors?.Add(actor);
         }
-        
+        return true;
     }
 }
