@@ -27,7 +27,7 @@ public class ActorConfiguration : IEntityTypeConfiguration<Actor>
             {
                 Id = Guid.Parse("e2b8c0d4-5f67-4890-b234-c567d890e123"),
                 Title = "Ryan Gosling",
-                YearOfBirth = 1963,
+                YearOfBirth = 1980,
             }
         );
     }

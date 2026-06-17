@@ -23,6 +23,14 @@ Content-Type: application/json
    "duration": "156"
 }
 
+###
+POST {{baseUrl}}/api/actors
+Content-Type: application/json
+{
+   "name": "Ryan Gosling",
+   "YearOfBirth": "1980"
+}
+
 ### {
 ###   "title": "Your Name",
 ###   "year": "2016",
