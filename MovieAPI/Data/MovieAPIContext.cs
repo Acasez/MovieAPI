@@ -12,4 +12,5 @@ public class MovieAPIContext(DbContextOptions<MovieAPIContext> options) : DbCont
     public DbSet<Movie> Movie { get; set; } = default!;
     public DbSet<Review> Review { get; set; } = default!;
     public DbSet<Actor> Actor { get; set; } = default!;
+    public DbSet<MovieActor> MovieActors { get; set; } = default!;
 }

@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@ID = 3
+@ID = 2
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json

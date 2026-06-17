@@ -12,6 +12,7 @@ public class Actor
 
 public class MovieActor
 {
+    public int Id { get; set; }
     public int MovieId { get; set; }
     public int ActorID { get; set; }
 }
