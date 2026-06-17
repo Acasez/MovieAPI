@@ -71,7 +71,6 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     public async Task<ActionResult> PartiallyUpdateMovie(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
-
         if (movieEntity == null)
         {
             return NotFound();

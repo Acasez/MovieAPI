@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@ID = 9
+@ID = 3
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
@@ -76,3 +76,6 @@ Content-Type: application/json-patch+json
 
 ### Delete movie
 DELETE {{baseUrl}}/api/movies/{{id}}
+
+### Delete actor
+DELETE {{baseUrl}}/api/actors/{{id}}
