@@ -2,19 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using MovieAPI.Data;
 using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
 using MovieAPI.Services;
-using System.Numerics;
 
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ActorsController(ActorInfoRepository repository, IMapper mapper) : ControllerBase
+public class ActorsController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
 {
     // GET: api/Actors
     [HttpGet]
@@ -71,22 +68,24 @@ public class ActorsController(ActorInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
     }
 
-    [HttpPost("{movieId}")]
-    public async Task<ActionResult<ActorDTO>> CreateActorInMovie(int movieId, ActorCreateDTO actorToCreate)
+    [HttpPost("movies/{movieId}/actors/{actorId}")]
+    public async Task<IActionResult> AddActorToMovie(int movieId, int actorId)
     {
-        if (!await repository.MovieExists(movieId))
+        if (!await repository.MovieExists(movieId) || !await repository.ActorExists(actorId))
         {
-            //logger.LogInformation("City with id {CityId} wasn't found", cityId);
             return NotFound();
         }
 
-        Actor? createdActor = mapper.Map<Actor>(actorToCreate);
+        MovieActor movieActor = new()
+        {
+            MovieId = movieId,
+            ActorId = actorId
+        };
 
-        await repository.CreateActor(createdActor, movieId);
+        repository.AddMovieActor(movieActor);
         await repository.SaveChangesAsync();
 
-        ActorDTO createdActorDTO = mapper.Map<ActorDTO>(createdActor);
-        return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
+        return Ok(movieActor);
     }
 
     [HttpPatch("{actorId}")]

@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:5259
-@ID = 2
+@movieId = 4
+@actorId = 1
 
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
@@ -8,10 +9,13 @@ Accept: application/json
 GET {{baseUrl}}/api/movies
 
 ###
-GET {{baseUrl}}/api/movies/{{id}}
+GET {{baseUrl}}/api/movies/{{movieId}}
 
 ###
 GET {{baseUrl}}/api/actors
+
+###
+GET {{baseUrl}}/api/actors/{{actorId}}
 
 ###
 POST {{baseUrl}}/api/movies
@@ -31,20 +35,8 @@ Content-Type: application/json
    "YearOfBirth": "1963"
 }
 
-###
-POST {{baseUrl}}/api/actors/{{id}}
-Content-Type: application/json
-{
-   "name": "Ryan Gosling",
-   "YearOfBirth": "1992"
-}
-
-### {
-###   "title": "Your Name",
-###   "year": "2016",
-###   "genre": "Romance",
-###   "duration": "107"
-### }
+### Add actor to movie
+POST {{baseUrl}}/api/movies/{{movieId}}/actors/{{actorId}}
 ### {
 ###   "title": "Rogue One",
 ###   "year": "2016",
@@ -53,7 +45,7 @@ Content-Type: application/json
 ### }
 
 ### Update movie (full update with PUT)
-PUT {{baseUrl}}/api/movies/{{id}}
+PUT {{baseUrl}}/api/movies/{{movieId}}
 Content-Type: application/json
 
 {
@@ -64,7 +56,7 @@ Content-Type: application/json
 }
 
 ### Partially update movie (PATCH with JSON Patch - Replace operation)
-PATCH {{baseUrl}}/api/movies/{{id}}
+PATCH {{baseUrl}}/api/movies/{{movieId}}
 Content-Type: application/json-patch+json
 [
   {
@@ -75,7 +67,7 @@ Content-Type: application/json-patch+json
 ]
 
 ### Delete movie
-DELETE {{baseUrl}}/api/movies/{{id}}
+DELETE {{baseUrl}}/api/movies/{{movieId}}
 
 ### Delete actor
-DELETE {{baseUrl}}/api/actors/{{id}}
+DELETE {{baseUrl}}/api/actors/{{movieId}}

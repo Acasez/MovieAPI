@@ -1,6 +1,7 @@
-﻿using MovieAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieAPI.Data;
 using MovieAPI.Models;
-using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace MovieAPI.Services;
 
@@ -29,5 +30,41 @@ public class MovieInfoRepository(MovieAPIContext context)
     internal async Task<bool> SaveChangesAsync()
     {
         return (await context.SaveChangesAsync() >= 0);
+    }
+
+
+    internal async Task<Actor?> GetActorAsync(int actorId)
+    {
+        return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
+    }
+
+    internal async Task CreateActor(Actor actor, int movieId = 0)
+    {
+        context.Add(actor);
+    }
+
+    internal void DeleteActor(Actor actorEntity)
+    {
+        context.Remove(actorEntity);
+    }
+
+    
+    public async Task<IEnumerable<Actor>> GetActorsAsync()
+    {
+        return await context.Actor.OrderBy(a => a.Name).ToListAsync();
+    }
+    internal async Task<bool> MovieExists(int movieID)
+    {
+        return await context.Movie.AnyAsync(m => m.Id == movieID);
+    }
+
+    internal async Task<bool> ActorExists(int actorId)
+    {
+        return await context.Actor.AnyAsync(a => a.Id == actorId);
+    }
+
+    internal void AddMovieActor(MovieActor movieActor)
+    {
+        context.Add(movieActor);
     }
 }
