@@ -49,8 +49,8 @@ Content-Type: application/json
 {
    "ReviewerName": "Acasez",
    "Comment": "Stellar",
-   "Rating": "9",
-   "MovieId": "16".
+   "Rating": 9,
+   "MovieId": 16
 }
 
 ### Add Actor to Movie

@@ -29,14 +29,14 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
     [HttpGet("{reviewID}")]
     public async Task<ActionResult<ReviewDTO>> GetReview(int reviewID)
     {
-        Review? actorEntity = await repository.GetReviewAsync(reviewID);
+        Review? reviewEntity = await repository.GetReviewAsync(reviewID);
 
-        if (actorEntity == null)
+        if (reviewEntity == null)
         {
             return NotFound();
         }
 
-        return Ok(mapper.Map<ReviewDTO>(actorEntity));
+        return Ok(mapper.Map<ReviewDTO>(reviewEntity));
     }
 
     // PUT: api/Reviews/5
