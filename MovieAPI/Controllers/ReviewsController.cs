@@ -18,11 +18,11 @@ namespace MovieAPI.Controllers;
 public class ReviewsController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
 {
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<ReviewDTOs>>> GetReviews()
+    public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
     {
         IEnumerable<Review> movies = await repository.GetReviewsAsync();
 
-        return Ok(mapper.Map<IEnumerable<ReviewDTOs>>(movies));
+        return Ok(mapper.Map<IEnumerable<ReviewDTO>>(movies));
     }
 
     // GET: api/Reviews/5
@@ -72,23 +72,18 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
     }
 
     // DELETE: api/Reviews/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteReview(int id)
+    [HttpDelete("{reviewId}")]
+    public async Task<IActionResult> DeleteReview(int reviewId)
     {
-        var review = await context.Review.FindAsync(id);
+        var review = await repository.GetReviewAsync(reviewId);
         if (review == null)
         {
             return NotFound();
         }
 
-        context.Review.Remove(review);
-        await context.SaveChangesAsync();
+        repository.DeleteReview(review);
+        await repository.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private bool ReviewExists(int id)
-    {
-        return context.Review.Any(e => e.Id == id);
     }
 }

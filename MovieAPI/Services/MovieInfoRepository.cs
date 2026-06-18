@@ -101,4 +101,9 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         context.Add(review);
     }
+
+    internal void DeleteReview(Review reviewEntity)
+    {
+        context.Remove(reviewEntity);
+    }
 }
