@@ -60,12 +60,15 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
     // POST: api/Reviews
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Review>> PostReview(Review review)
+    public async Task<ActionResult<ReviewDTO>> CreateReview(ReviewCreateDTO reviewToCreate)
     {
-        context.Review.Add(review);
-        await context.SaveChangesAsync();
+        Review? review = mapper.Map<Review>(reviewToCreate);
 
-        return CreatedAtAction("GetReview", new { id = review.Id }, review);
+        await repository.CreateReview(review);
+        await repository.SaveChangesAsync();
+
+        ReviewDTO createdReview = mapper.Map<ReviewDTO>(review);
+        return CreatedAtAction("GetReview", new { reviewId = createdReview.Id }, createdReview);
     }
 
     // DELETE: api/Reviews/5

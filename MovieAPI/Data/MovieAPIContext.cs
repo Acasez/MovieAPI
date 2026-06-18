@@ -14,10 +14,10 @@ public class MovieAPIContext(DbContextOptions<MovieAPIContext> options) : DbCont
     public DbSet<Actor> Actor { get; set; } = default!;
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Movie>().HasMany(m => m.Actors).WithMany(a => a.Movies)
+        modelBuilder.Entity<Movie>().HasMany(m => m.Actors).WithMany(a => a.Actors)
             .UsingEntity<Dictionary<string, object>>(
                 "MovieActor",
-                j => j.HasOne<Actor>().WithMany().HasForeignKey("ActorId"),
+                j => j.HasOne<Movie>().WithMany().HasForeignKey("ActorId"),
                 j => j.HasOne<Movie>().WithMany().HasForeignKey("MovieId")
             );
     }

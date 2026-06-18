@@ -8,11 +8,11 @@ public class ActorProfiles : Profile
 {
     public ActorProfiles()
     {
-        CreateMap<Actor, ActorCreateDTO>();
-        CreateMap<ActorCreateDTO, Actor>();
-        CreateMap<ActorDTO, Actor>();
-        CreateMap<Actor, ActorDTO>();
-        CreateMap<ActorUpdateDTO, Actor>();
-        CreateMap<Actor, ActorUpdateDTO>();
+        CreateMap<Movie, ActorCreateDTO>();
+        CreateMap<ActorCreateDTO, Movie>();
+        CreateMap<ActorDTO, Movie>();
+        CreateMap<Movie, ActorDTO>();
+        CreateMap<ActorUpdateDTO, Movie>();
+        CreateMap<Movie, ActorUpdateDTO>();
     }
 }

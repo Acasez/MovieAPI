@@ -5,9 +5,9 @@ using MovieAPI.Models;
 
 namespace MovieAPI.Extensions;
 
-public class ActorConfiguration : IEntityTypeConfiguration<Actor>
+public class ActorConfiguration : IEntityTypeConfiguration<Movie>
 {
-    public void Configure(EntityTypeBuilder<Actor> builder)
+    public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder.ToTable("Movies");
         builder.HasKey(a => a.Id);

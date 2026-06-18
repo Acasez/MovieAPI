@@ -66,12 +66,12 @@ public class MovieInfoRepository(MovieAPIContext context)
 
     internal async Task<bool> MovieExists(int movieID)
     {
-        return await context.Movie.AnyAsync(m => m.Id == movieID);
+        return await context.Movie.AnyAsync((m => m.Id == movieID));
     }
 
     internal async Task<bool> ActorExists(int actorId)
     {
-        return await context.Actor.AnyAsync(a => a.Id == actorId);
+        return await context.Actor.AnyAsync((a => a.Id == actorId));
     }
 
     internal static bool AddActorToMovie(Movie movieEntity, Actor actor)
@@ -95,5 +95,10 @@ public class MovieInfoRepository(MovieAPIContext context)
     internal async Task<Review?> GetReviewAsync(int reviewID)
     {
         return await context.Review.Where(r => r.Id == reviewID).FirstOrDefaultAsync();
+    }
+
+    internal async Task CreateReview(Review review)
+    {
+        context.Add(review);
     }
 }

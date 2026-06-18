@@ -132,7 +132,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
             Actor? actor = await repository.GetActorAsync(actorId);
             if (actor != null)
             {
-                MovieInfoRepository.AddActorToMovie(movieEntity,  actor);
+                MovieInfoRepository.AddActorToMovie(movieEntity, actor);
             }
         }
 
