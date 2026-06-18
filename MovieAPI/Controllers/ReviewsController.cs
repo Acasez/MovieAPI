@@ -20,14 +20,14 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
     {
-        IEnumerable<Review> movies = await repository.GetReviewsAsync();
+        IEnumerable<Review> reviews = await repository.GetReviewsAsync();
 
-        return Ok(mapper.Map<IEnumerable<ReviewDTO>>(movies));
+        return Ok(mapper.Map<IEnumerable<ReviewDTO>>(reviews));
     }
 
     // GET: api/Reviews/5
     [HttpGet("{reviewID}")]
-    public async Task<ActionResult<MovieDTO>> GetReview(int reviewID)
+    public async Task<ActionResult<ReviewDTO>> GetReview(int reviewID)
     {
         Review? actorEntity = await repository.GetReviewAsync(reviewID);
 
@@ -36,22 +36,22 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
             return NotFound();
         }
 
-        return Ok(mapper.Map<MovieDTO>(actorEntity));
+        return Ok(mapper.Map<ReviewDTO>(actorEntity));
     }
 
     // PUT: api/Reviews/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{reviewId}")]
-    public async Task<IActionResult> UpdateMovie(int reviewId, MovieUpdateDTO movie)
+    public async Task<IActionResult> UpdateReview(int reviewId, ReviewUpdateDTO review)
     {
-        Movie? movieEntity = await repository.GetMovieAsync(reviewId);
+        Review? reviewEntity = await repository.GetReviewAsync(reviewId);
 
-        if (movieEntity == null)
+        if (reviewEntity == null)
         {
             return NotFound();
         }
 
-        mapper.Map(movie, movieEntity);
+        mapper.Map(review, reviewEntity);
         await repository.SaveChangesAsync();
 
         return NoContent();
