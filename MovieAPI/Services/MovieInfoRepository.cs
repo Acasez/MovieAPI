@@ -45,13 +45,7 @@ public class MovieInfoRepository(MovieAPIContext context)
         return (await context.SaveChangesAsync() >= 0);
     }
 
-
-    internal async Task<Actor?> GetActorAsync(int actorId)
-    {
-        return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
-    }
-
-    internal async Task CreateActor(Actor actor, int movieId = 0)
+    internal async Task CreateActor(Actor actor)
     {
         context.Add(actor);
     }
@@ -65,6 +59,11 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         return await context.Actor.OrderBy(a => a.Name).ToListAsync();
     }
+    internal async Task<Actor?> GetActorAsync(int actorId)
+    {
+        return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
+    }
+
     internal async Task<bool> MovieExists(int movieID)
     {
         return await context.Movie.AnyAsync(m => m.Id == movieID);
@@ -75,7 +74,7 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Actor.AnyAsync(a => a.Id == actorId);
     }
 
-    internal bool AddActorToMovie(Movie movieEntity, Actor actor)
+    internal static bool AddActorToMovie(Movie movieEntity, Actor actor)
     {
         if (movieEntity.Actors == null)
         {
@@ -86,5 +85,10 @@ public class MovieInfoRepository(MovieAPIContext context)
             movieEntity.Actors?.Add(actor);
         }
         return true;
+    }
+
+    internal async Task<IEnumerable<Review>> GetReviewsAsync()
+    {
+        return await context.Review.OrderBy(r => r.ReviewerName).ToListAsync();
     }
 }

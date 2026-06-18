@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
+using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
+using MovieAPI.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReviewsController(MovieAPIContext context) : ControllerBase
+public class ReviewsController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
 {
-
-    // GET: api/Reviews
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Review>>> GetReview()
+    [HttpGet()]
+    public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
     {
-        return await context.Review.ToListAsync();
+        IEnumerable<Review> movies = await repository.GetReviewsAsync();
+
+        return Ok(mapper.Map<IEnumerable<ReviewDTO>>(movies));
     }
 
     // GET: api/Reviews/5

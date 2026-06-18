@@ -9,4 +9,5 @@ public class Movie
     //In minutes
     public int Duration { get; set; }
     public ICollection<Actor>? Actors { get; set; } = [];
+    public ICollection<Review>? Reviews { get; set; } = [];
 }
