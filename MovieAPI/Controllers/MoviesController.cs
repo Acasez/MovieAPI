@@ -22,17 +22,17 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // GET: api/Movies/5
-    [HttpGet("{movieId}")]
-    public async Task<ActionResult<MovieDTO>> GetMovie(int movieId)
+    [HttpGet("{actor}")]
+    public async Task<ActionResult<ActorDTO>> GetActor(int actorId)
     {
-        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+        Actor? actorEntity = await repository.GetActorAsync(actorId);
 
-        if (movieEntity == null)
+        if (actorEntity == null)
         {
             return NotFound();
         }
 
-        return Ok(mapper.Map<MovieDTO>(movieEntity));
+        return Ok(mapper.Map<ActorDTO>(actorEntity));
     }
 
     // PUT: api/Movies/5

@@ -91,4 +91,9 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         return await context.Review.OrderBy(r => r.ReviewerName).ToListAsync();
     }
+
+    internal async Task<Review?> GetReviewAsync(int reviewID)
+    {
+        return await context.Review.Where(r => r.Id == reviewID).FirstOrDefaultAsync();
+    }
 }

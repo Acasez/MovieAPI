@@ -18,54 +18,41 @@ namespace MovieAPI.Controllers;
 public class ReviewsController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
 {
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
+    public async Task<ActionResult<IEnumerable<ReviewDTOs>>> GetReviews()
     {
         IEnumerable<Review> movies = await repository.GetReviewsAsync();
 
-        return Ok(mapper.Map<IEnumerable<ReviewDTO>>(movies));
+        return Ok(mapper.Map<IEnumerable<ReviewDTOs>>(movies));
     }
 
     // GET: api/Reviews/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Review>> GetReview(int id)
+    [HttpGet("{reviewID}")]
+    public async Task<ActionResult<MovieDTO>> GetReview(int reviewID)
     {
-        var review = await context.Review.FindAsync(id);
+        Review? actorEntity = await repository.GetReviewAsync(reviewID);
 
-        if (review == null)
+        if (actorEntity == null)
         {
             return NotFound();
         }
 
-        return review;
+        return Ok(mapper.Map<MovieDTO>(actorEntity));
     }
 
     // PUT: api/Reviews/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutReview(int id, Review review)
+    [HttpPut("{reviewId}")]
+    public async Task<IActionResult> UpdateMovie(int reviewId, MovieUpdateDTO movie)
     {
-        if (id != review.Id)
+        Movie? movieEntity = await repository.GetMovieAsync(reviewId);
+
+        if (movieEntity == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
-        context.Entry(review).State = EntityState.Modified;
-
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ReviewExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        mapper.Map(movie, movieEntity);
+        await repository.SaveChangesAsync();
 
         return NoContent();
     }
