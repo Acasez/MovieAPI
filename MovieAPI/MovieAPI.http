@@ -7,7 +7,7 @@
 GET {{baseUrl}}/api/movies
 
 ### Get all movies filtered
-GET {{baseUrl}}/api/movies?name=Pirates
+GET {{baseUrl}}/api/movies?name=Dunkirk
 Accept: application/json
 
 ### Get all movies searched
@@ -35,25 +35,27 @@ GET {{baseUrl}}/api/reviews/{{reviewId}}
 ### Create movie
 POST {{baseUrl}}/api/movies
 Content-Type: application/json
+
 {
-   "title": "The Martian",
-   "year": "2015",
-   "genre": "Sci-fi",
-   "duration": "142",
-   "actorIds": [1004]
+   "title": "My Neighbor Totoro",
+   "year": "1988",
+   "genre": "Slice of Life",
+   "duration": "86"
 }
 
 ### Create Actor
 POST {{baseUrl}}/api/actors
 Content-Type: application/json
+
 {
-   "name": "Alan Tudyk",
-   "YearOfBirth": "1971"
+   "name": "Noriko Hidaka",
+   "YearOfBirth": "1962"
 }
 
 ### Create actor in movie
 Post {{baseUrl}}/api/movies/{{movieId}}
 Content-Type: application/json
+
 {
    "name": "Diego Luna",
    "YearOfBirth": "1979"
@@ -62,6 +64,7 @@ Content-Type: application/json
 ### Create Review
 POST {{baseUrl}}/api/reviews
 Content-Type: application/json
+
 {
    "ReviewerName": "Acasez",
    "Comment": "The Best Star Wars Movie",
