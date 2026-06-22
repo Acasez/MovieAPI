@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@movieId = 9
+@movieId = 1
 @actorId = 1
 @reviewId = 1
 
@@ -28,19 +28,19 @@ GET {{baseUrl}}/api/reviews/{{reviewId}}
 POST {{baseUrl}}/api/movies
 Content-Type: application/json
 {
-   "title": "Project Hail Mary",
-   "year": "2026",
+   "title": "The Martian",
+   "year": "2015",
    "genre": "Sci-fi",
-   "duration": "156",
-   "actorIds": [2, 4]
+   "duration": "142",
+   "actorIds": [1004]
 }
 
 ### Create Actor
 POST {{baseUrl}}/api/actors
 Content-Type: application/json
 {
-   "name": "James Ortiz",
-   "YearOfBirth": "1984"
+   "name": "Matt Damon",
+   "YearOfBirth": "1970"
 }
 
 ### Create Review
@@ -48,9 +48,9 @@ POST {{baseUrl}}/api/reviews
 Content-Type: application/json
 {
    "ReviewerName": "Acasez",
-   "Comment": "Stellar",
-   "Rating": 9,
-   "MovieId": 16
+   "Comment": "The Best Star Wars Movie",
+   "Rating": 10,
+   "MovieId": 10
 }
 
 ### Add Actor to Movie
