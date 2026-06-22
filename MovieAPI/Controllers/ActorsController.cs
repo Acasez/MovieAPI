@@ -55,7 +55,6 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // POST: api/Actors
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<ActorDTO>> CreateActor(ActorCreateDTO actorToCreate)
     {

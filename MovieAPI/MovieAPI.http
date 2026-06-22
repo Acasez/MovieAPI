@@ -3,9 +3,6 @@
 @actorId = 1
 @reviewId = 1
 
-GET {{baseUrl}}/weatherforecast/
-Accept: application/json
-
 ### Get all movies
 GET {{baseUrl}}/api/movies
 
@@ -17,19 +14,19 @@ Accept: application/json
 GET {{baseUrl}}/api/movies?searchQuery=Sci-fi
 Accept: application/json
 
-###
+### Get movie by Id
 GET {{baseUrl}}/api/movies/{{movieId}}
 
-###
+### Get all actors
 GET {{baseUrl}}/api/actors
 
-###
+### Get actor by Id
 GET {{baseUrl}}/api/actors/{{actorId}}
 
-###
+### Get all reviews
 GET {{baseUrl}}/api/reviews
 
-###
+### Get review by Id
 GET {{baseUrl}}/api/reviews/{{reviewId}}
 
 ### Create movie
@@ -47,8 +44,16 @@ Content-Type: application/json
 POST {{baseUrl}}/api/actors
 Content-Type: application/json
 {
-   "name": "Matt Damon",
-   "YearOfBirth": "1970"
+   "name": "Alan Tudyk",
+   "YearOfBirth": "1971"
+}
+
+### Create actor in movie
+Post {{baseUrl}}/api/movies/{{movieId}}
+Content-Type: application/json
+{
+   "name": "Diego Luna",
+   "YearOfBirth": "1979"
 }
 
 ### Create Review
@@ -64,7 +69,7 @@ Content-Type: application/json
 ### Add Actor to Movie
 POST {{baseUrl}}/api/actors/{{movieId}}/actors
 Content-Type: application/json
-[5] // IDs of actors to add
+[1007] // IDs of actors to add
 
 ### {
 ###   "title": "Rogue One",

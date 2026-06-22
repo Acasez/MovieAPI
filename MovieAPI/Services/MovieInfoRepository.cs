@@ -60,8 +60,13 @@ public class MovieInfoRepository(MovieAPIContext context)
         return (await context.SaveChangesAsync() >= 0);
     }
 
-    internal async Task CreateActor(Actor actor)
+    internal async Task CreateActor(Actor actor, Movie? movie = null)
     {
+        if (movie != null)
+        {
+            actor.Movies?.Add(movie);
+            AddActorToMovie(movie, actor);
+        }
         context.Add(actor);
     }
 

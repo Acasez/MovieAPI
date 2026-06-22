@@ -11,8 +11,8 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class MoviesController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
 {
-    // GET: api/Movies //TODO add string? name, string? searchQuery
-
+    // GET: api/Movies 
+    //TODO add string? name, string? searchQuery
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(string? name, string? searchQuery)
     {
@@ -21,7 +21,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }
 
-    // GET: api/Movies/5
+    // GET: api/Movies/movieId
     [HttpGet("{movieId}")]
     public async Task<ActionResult<MovieDTO>> GetMovie(int movieId)
     {
@@ -35,7 +35,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
 
-    // PUT: api/Movies/5
+    // PUT: api/Movies/movieId
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{movieId}")]
     public async Task<IActionResult> UpdateMovie(int movieId, MovieUpdateDTO movie)
@@ -65,6 +65,25 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         MovieDTO createdMovie = mapper.Map<MovieDTO>(movie);
         return CreatedAtAction("GetMovie", new { movieId = createdMovie.Id }, createdMovie);
+    }
+
+    // POST: api/Movies/movieId
+    [HttpPost("{movieId}")]  // Create actor in movie
+    public async Task<ActionResult<ActorDTO>> CreateActorInMovie(ActorCreateDTO actorToCreate, int movieId)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+        if (movieEntity == null)
+        {
+            return NotFound();
+        }
+
+        Actor? actor = mapper.Map<Actor>(actorToCreate);
+
+        await repository.CreateActor(actor, movieEntity);
+        await repository.SaveChangesAsync();
+
+        ActorDTO createdActorDTO = mapper.Map<ActorDTO>(actor);
+        return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
     }
 
     [HttpPatch("{movieId}")]
@@ -99,7 +118,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         return NoContent();
     }
 
-    // DELETE: api/Movies/5
+    // DELETE: api/Movies/movieId
     [HttpDelete("{movieId}")]
     public async Task<IActionResult> DeleteMovie(int movieId)
     {
