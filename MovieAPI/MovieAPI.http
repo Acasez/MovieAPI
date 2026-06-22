@@ -6,8 +6,16 @@
 GET {{baseUrl}}/weatherforecast/
 Accept: application/json
 
-###
+### Get all movies
 GET {{baseUrl}}/api/movies
+
+### Get all movies filtered
+GET {{baseUrl}}/api/movies?name=Pirates
+Accept: application/json
+
+### Get all movies searched
+GET {{baseUrl}}/api/movies?searchQuery=Sci-fi
+Accept: application/json
 
 ###
 GET {{baseUrl}}/api/movies/{{movieId}}

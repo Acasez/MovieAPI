@@ -14,9 +14,9 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     // GET: api/Movies //TODO add string? name, string? searchQuery
 
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
+    public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(string? name, string? searchQuery)
     {
-        IEnumerable<Movie> movies = await repository.GetMoviesAsync();
+        IEnumerable<Movie> movies = await repository.GetMoviesAsync(name, searchQuery);
 
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }

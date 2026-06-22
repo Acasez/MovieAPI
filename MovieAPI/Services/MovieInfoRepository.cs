@@ -8,9 +8,24 @@ namespace MovieAPI.Services;
 
 public class MovieInfoRepository(MovieAPIContext context)
 {
-    public async Task<IEnumerable<Movie>> GetMoviesAsync()
+    public async Task<IEnumerable<Movie>> GetMoviesAsync(string? name, string? searchQuery)
     {
-        return await context.Movie.OrderBy(m => m.Title).ToListAsync();
+        IQueryable<Movie> collection = context.Movie;
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            name = name.Trim();
+            collection = collection.Where(c => c.Title == name);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            searchQuery = searchQuery.Trim();
+            collection = collection.Where(c => c.Title.Contains(searchQuery)
+                || (c.Genre != null && c.Genre.Contains(searchQuery)));
+        }
+
+        return await collection.OrderBy(m => m.Title).ToListAsync();
     }
 
     internal async Task<Movie?> GetMovieAsync(int movieId)
