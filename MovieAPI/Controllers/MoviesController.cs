@@ -83,7 +83,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.SaveChangesAsync();
 
         ActorDTO createdActorDTO = mapper.Map<ActorDTO>(actor);
-        return CreatedAtAction(actionName: "GetActor", controllerName: "Actor",
+        return CreatedAtAction(actionName: "GetActor", controllerName: "Actors",
             routeValues: new { actorId = createdActorDTO.Id },value: createdActorDTO);
     }
 
