@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace MovieAPI.DataTransferObjects;
-
+// ReSharper disable once InconsistentNaming
 public class MovieDTO
 {
     [Required]
@@ -15,7 +15,7 @@ public class MovieDTO
     [Range(1, 1000)]
     public int Duration { get; set; }
 }
-
+// ReSharper disable once InconsistentNaming
 public class MovieCreateDTO
 {
     [Required]
@@ -30,7 +30,7 @@ public class MovieCreateDTO
     public int? Duration { get; set; }
     public List<int>? ActorIds { get; set; }
 }
-
+// ReSharper disable once InconsistentNaming
 public class MovieUpdateDTO
 {
     [Required]

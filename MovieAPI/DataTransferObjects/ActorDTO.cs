@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace MovieAPI.DataTransferObjects;
-
+// ReSharper disable once InconsistentNaming
 public class ActorDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public int YearOfBirth { get; set; }
 }
+// ReSharper disable once InconsistentNaming
 public class ActorCreateDTO
 {
     [Required]
@@ -18,7 +19,7 @@ public class ActorCreateDTO
     [Range(1900, 2100)]
     public int YearOfBirth { get; set; }
 }
-
+// ReSharper disable once InconsistentNaming
 public class ActorUpdateDTO
 {
     [Required]

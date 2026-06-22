@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace MovieAPI.DataTransferObjects;
-
+// ReSharper disable once InconsistentNaming
 public class ReviewDTO
 {
     [Required]
@@ -11,6 +11,7 @@ public class ReviewDTO
     public int Rating { get; set; }
     public int MovieId { get; set; }
 }
+// ReSharper disable once InconsistentNaming
 public class ReviewUpdateDTO
 {
     [Required]
@@ -22,7 +23,7 @@ public class ReviewUpdateDTO
     [Required]
     public int MovieId { get; set; }
 }
-
+// ReSharper disable once InconsistentNaming
 public class ReviewCreateDTO
 {
     [Required]

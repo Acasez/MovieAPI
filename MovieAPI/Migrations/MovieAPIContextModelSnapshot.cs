@@ -65,16 +65,6 @@ namespace MovieAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movie");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 20,
-                            Duration = 102,
-                            Genre = "Slice of Life",
-                            Title = "Kiki's Delivery Service",
-                            Year = 0
-                        });
                 });
 
             modelBuilder.Entity("MovieAPI.Models.Review", b =>
