@@ -26,8 +26,6 @@ public class ReviewUpdateDTO
 // ReSharper disable once InconsistentNaming
 public class ReviewCreateDTO
 {
-    [Required]
-    public int Id { get; set; }
     public string ReviewerName { get; set; } = String.Empty;
     public string? Comment { get; set; }
     [Range(1, 10)]

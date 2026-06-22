@@ -48,8 +48,8 @@ POST {{baseUrl}}/api/actors
 Content-Type: application/json
 
 {
-   "name": "Noriko Hidaka",
-   "YearOfBirth": "1962"
+   "name": "Stellan Skarsgård",
+   "YearOfBirth": "1958"
 }
 
 ### Create actor in movie
