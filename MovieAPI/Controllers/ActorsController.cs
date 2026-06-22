@@ -15,9 +15,9 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
 {
     // GET: api/Actors
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ActorDTO>>> GetActors()
+    public async Task<ActionResult<IEnumerable<ActorDTO>>> GetActors(string? name, string? searchQuery)
     {
-        IEnumerable<Actor> actors = await repository.GetActorsAsync();
+        IEnumerable<Actor> actors = await repository.GetActorsAsync(name, searchQuery);
 
         return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
     }

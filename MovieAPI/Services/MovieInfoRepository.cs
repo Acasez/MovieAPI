@@ -75,9 +75,23 @@ public class MovieInfoRepository(MovieAPIContext context)
         context.Remove(actorEntity);
     }
     
-    public async Task<IEnumerable<Actor>> GetActorsAsync()
+    public async Task<IEnumerable<Actor>> GetActorsAsync(string? name, string? searchQuery)
     {
-        return await context.Actor.OrderBy(a => a.Name).ToListAsync();
+        IQueryable<Actor> collection = context.Actor;
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            name = name.Trim();
+            collection = collection.Where(c => c.Name == name);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            searchQuery = searchQuery.Trim();
+            collection = collection.Where(a => a.Name != null && a.Name.Contains(searchQuery));
+        }
+
+        return await collection.OrderBy(a => a.Name).ToListAsync();
     }
     internal async Task<Actor?> GetActorAsync(int actorId)
     {

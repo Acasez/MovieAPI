@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:5259
 @movieId = 1
-@actorId = 1
+@actorId = 1009
 @reviewId = 1
 
 ### Get all movies
@@ -19,6 +19,9 @@ GET {{baseUrl}}/api/movies/{{movieId}}
 
 ### Get all actors
 GET {{baseUrl}}/api/actors
+
+### Get all actors searched
+GET {{baseUrl}}/api/actors?searchQuery=Diego
 
 ### Get actor by Id
 GET {{baseUrl}}/api/actors/{{actorId}}
@@ -104,4 +107,4 @@ Content-Type: application/json-patch+json
 DELETE {{baseUrl}}/api/movies/{{movieId}}
 
 ### Delete actor
-DELETE {{baseUrl}}/api/actors/{{movieId}}
+DELETE {{baseUrl}}/api/actors/{{actorId}}
