@@ -20,5 +20,22 @@ public class MovieAPIContext(DbContextOptions<MovieAPIContext> options) : DbCont
                 j => j.HasOne<Actor>().WithMany().HasForeignKey("ActorId"),
                 j => j.HasOne<Movie>().WithMany().HasForeignKey("MovieId")
             );
+        SeedData(modelBuilder);
+    }
+
+    private static void SeedData(ModelBuilder modelBuilder)
+    {
+        // Seed recipes.
+        //Movie kikis = new()
+        //{
+        //    Id = 20,
+        //    Title = "Kiki's Delivery Service",
+        //    Genre = "Slice of Life",
+        //    Duration = 102,
+        //};
+
+        //modelBuilder.Entity<Movie>().HasData(
+        //    kikis
+        //);
     }
 }
