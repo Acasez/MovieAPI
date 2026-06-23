@@ -14,6 +14,7 @@ public class MovieDTO
     public string? Genre { get; set; }
     [Range(1, 1000)]
     public int Duration { get; set; }
+    public int GenreId { get; set; }
 }
 // ReSharper disable once InconsistentNaming
 public class MovieCreateDTO

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieAPI.Data;
+using MovieAPI.Models;
 using MovieAPI.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

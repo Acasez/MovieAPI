@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:5259
 @movieId = 1
-@actorId = 1009
+@actorId = 1010
 @reviewId = 1
 
 ### Get all movies

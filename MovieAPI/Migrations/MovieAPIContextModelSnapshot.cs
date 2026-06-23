@@ -40,6 +40,27 @@ namespace MovieAPI.Migrations
                     b.ToTable("Actor");
                 });
 
+            modelBuilder.Entity("MovieAPI.Models.Genre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genre");
+                });
+
             modelBuilder.Entity("MovieAPI.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -55,6 +76,9 @@ namespace MovieAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -63,6 +87,8 @@ namespace MovieAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GenreId");
 
                     b.ToTable("Movie");
                 });
@@ -111,6 +137,17 @@ namespace MovieAPI.Migrations
                     b.ToTable("MovieActor");
                 });
 
+            modelBuilder.Entity("MovieAPI.Models.Movie", b =>
+                {
+                    b.HasOne("MovieAPI.Models.Genre", "GenreRef")
+                        .WithMany("Movies")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GenreRef");
+                });
+
             modelBuilder.Entity("MovieAPI.Models.Review", b =>
                 {
                     b.HasOne("MovieAPI.Models.Movie", null)
@@ -133,6 +170,11 @@ namespace MovieAPI.Migrations
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MovieAPI.Models.Genre", b =>
+                {
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("MovieAPI.Models.Movie", b =>

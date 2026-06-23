@@ -21,8 +21,8 @@ public class MovieInfoRepository(MovieAPIContext context)
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {
             searchQuery = searchQuery.Trim();
-            collection = collection.Where(c => c.Title.Contains(searchQuery)
-                || (c.Genre != null && c.Genre.Contains(searchQuery)));
+            collection = collection.Where(c => c.Title.Contains(searchQuery));
+            //TODO, re add search by genre
         }
 
         return await collection.OrderBy(m => m.Title).ToListAsync();
@@ -139,5 +139,31 @@ public class MovieInfoRepository(MovieAPIContext context)
     internal void DeleteReview(Review reviewEntity)
     {
         context.Remove(reviewEntity);
+    }
+    
+    public async Task<IEnumerable<Genre>> GetGenresAsync()
+    {
+        return await context.Genre.OrderBy(g => g.Name).ToListAsync();
+    }
+
+    public async Task<Genre?> GetGenreAsync(int genreId)
+    {
+        return await context.Genre.Where(g => g.Id == genreId).FirstOrDefaultAsync();
+    }
+
+    public async Task CreateGenre(Genre genre)
+    {
+        context.Add(genre);
+    }
+
+    public void DeleteGenre(Genre genreEntity)
+    {
+        context.Remove(genreEntity);
+    }
+
+    public static void SetMovieGenre(Movie movieEntity, Genre genre)
+    {
+        movieEntity.Genre = genre;
+        movieEntity.GenreId = genre.Id;
     }
 }

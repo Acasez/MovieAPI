@@ -5,9 +5,11 @@ public class Movie
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public int Year { get; set; }
-    public string Genre { get; set; } = string.Empty;
     //In minutes
     public int Duration { get; set; }
+    // Foreign key and navigation property
+    public int GenreId { get; set; }
+    public Genre Genre { get; set; } = null!;
     public ICollection<Actor>? Actors { get; set; } = [];
     public ICollection<Review>? Reviews { get; set; } = [];
 }
