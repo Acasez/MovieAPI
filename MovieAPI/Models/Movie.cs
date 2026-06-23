@@ -9,7 +9,6 @@ public class Movie
     public int Duration { get; set; }
     // Foreign key and navigation property
     public int GenreId { get; set; }
-    public Genre Genre { get; set; } = null!;
     public ICollection<Actor>? Actors { get; set; } = [];
     public ICollection<Review>? Reviews { get; set; } = [];
 }

@@ -32,6 +32,15 @@ GET {{baseUrl}}/api/reviews
 ### Get review by Id
 GET {{baseUrl}}/api/reviews/{{reviewId}}
 
+### Create genre
+POST {{baseUrl}}/api/genres
+Content-Type: application/json
+
+{
+  "name": "Slice of life",
+  "description": "Chill vibes",
+}
+
 ### Create movie
 POST {{baseUrl}}/api/movies
 Content-Type: application/json
@@ -39,7 +48,7 @@ Content-Type: application/json
 {
    "title": "My Neighbor Totoro",
    "year": "1988",
-   "genre": "Slice of Life",
+   "genreId": "1",
    "duration": "86"
 }
 

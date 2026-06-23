@@ -159,9 +159,9 @@ public class MovieInfoRepository(MovieAPIContext context)
         context.Remove(genreEntity);
     }
 
-    public static void SetMovieGenre(Movie movieEntity, Genre genre)
-    {
-        movieEntity.Genre = genre;
-        movieEntity.GenreId = genre.Id;
-    }
+    // public static void SetMovieGenre(Movie movieEntity, Genre genre)
+    // {
+    //     movieEntity.Genre = genre;
+    //     movieEntity.GenreId = genre.Id;
+    // }
 }

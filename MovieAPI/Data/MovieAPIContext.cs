@@ -9,7 +9,6 @@ namespace MovieAPI.Data;
 
 public class MovieAPIContext(DbContextOptions<MovieAPIContext> options) : DbContext(options)
 {
-
     public DbSet<Movie> Movie { get; set; } = default!;
     public DbSet<Review> Review { get; set; } = default!;
     public DbSet<Actor> Actor { get; set; } = default!;

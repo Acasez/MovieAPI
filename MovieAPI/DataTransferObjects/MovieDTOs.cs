@@ -11,10 +11,9 @@ public class MovieDTO
     public string Title { get; set; } = string.Empty;
     [Range(1900, 2100)]
     public int Year { get; set; }
-    public string? Genre { get; set; }
+    public int? GenreId { get; set; }
     [Range(1, 1000)]
     public int Duration { get; set; }
-    public int GenreId { get; set; }
 }
 // ReSharper disable once InconsistentNaming
 public class MovieCreateDTO
@@ -24,7 +23,7 @@ public class MovieCreateDTO
     public string Title { get; set; } = string.Empty;
     [Range(1900, 2100)]
     public int? Year { get; set; }
-    public string? Genre { get; set; }
+    public int? GenreId { get; set; }
     [Range(1, 1000)]
     public int? Duration { get; set; }
     public List<int>? ActorIds { get; set; }
@@ -37,7 +36,7 @@ public class MovieUpdateDTO
     public string Title { get; set; } = string.Empty;
     [Range(1900, 2100)]
     public int? Year { get; set; }
-    public string? Genre { get; set; }
+    public int? GenreId { get; set; }
     [Range(1, 1000)]
     public int? Duration { get; set; }
 }

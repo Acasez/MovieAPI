@@ -131,7 +131,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
             Genre? genre = await repository.GetGenreAsync(genreId);
             if (genre != null)
             {
-                MovieInfoRepository.SetMovieGenre(movieEntity, genre);
+                //MovieInfoRepository.SetMovieGenre(movieEntity, genre);
             }
         }
 
