@@ -2,8 +2,6 @@
 using MovieAPI.Data;
 using MovieAPI.DataTransferObjects;
 using MovieAPI.Models;
-using System.Numerics;
-
 namespace MovieAPI.Services;
 
 public class MovieInfoRepository(MovieAPIContext context)
@@ -98,9 +96,9 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
     }
 
-    internal async Task<bool> MovieExists(int movieID)
+    internal async Task<bool> MovieExists(int movieId)
     {
-        return await context.Movie.AnyAsync((m => m.Id == movieID));
+        return await context.Movie.AnyAsync((m => m.Id == movieId));
     }
 
     internal async Task<bool> ActorExists(int actorId)
@@ -126,9 +124,9 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await context.Review.OrderBy(r => r.ReviewerName).ToListAsync();
     }
 
-    internal async Task<Review?> GetReviewAsync(int reviewID)
+    internal async Task<Review?> GetReviewAsync(int reviewId)
     {
-        return await context.Review.Where(r => r.Id == reviewID).FirstOrDefaultAsync();
+        return await context.Review.Where(r => r.Id == reviewId).FirstOrDefaultAsync();
     }
 
     internal async Task CreateReview(Review review)
