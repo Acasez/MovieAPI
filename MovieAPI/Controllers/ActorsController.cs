@@ -23,7 +23,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // GET: api/Actors/5
-    [HttpGet("{actorId}")]
+    [HttpGet("{actorId:int}")]
     public async Task<ActionResult<ActorDTO>> GetActor(int actorId)
     {
         Actor? actorEntity = await repository.GetActorAsync(actorId);
@@ -38,7 +38,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
 
     // PUT: api/Movies/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{actorId}")]
+    [HttpPut("{actorId:int}")]
     public async Task<IActionResult> UpdateActor(int actorId, ActorUpdateDTO actor)
     {
         Actor? actorEntity = await repository.GetActorAsync(actorId);
@@ -67,7 +67,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
     }
 
-    [HttpPatch("{actorId}")]
+    [HttpPatch("{actorId:int}")]
     public async Task<ActionResult> PartiallyUpdateActor(int actorId, [FromBody] JsonPatchDocument<ActorUpdateDTO> patchDocument)
     {
         Actor? actorEntity = await repository.GetActorAsync(actorId);
@@ -85,12 +85,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
             ModelState.AddModelError(key, jsonPatchError.ErrorMessage);
         });
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if (!TryValidateModel(actorPatch))
+        if (!ModelState.IsValid || !TryValidateModel(actorPatch))
         {
             return BadRequest(ModelState);
         }
@@ -101,7 +96,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // DELETE: api/Actors/5
-    [HttpDelete("{actorId}")]
+    [HttpDelete("{actorId:int}")]
     public async Task<IActionResult> DeleteActor(int actorId)
     {
         Actor? actorEntity = await repository.GetActorAsync(actorId);
@@ -117,7 +112,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
         return NoContent();
     }
 
-    [HttpPost("{movieId}/actors")]
+    [HttpPost("{movieId:int}/actors")]
     public async Task<IActionResult> AddActorsToMovie(int movieId, List<int> actorIds)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);

@@ -105,7 +105,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
             routeValues: new { movieId = movieEntity.Id },value: createdDetailsDto);
     }
 
-    [HttpPatch("{movieId}")]
+    [HttpPatch("{movieId:int}")]
     public async Task<ActionResult> PartiallyUpdateMovie(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
@@ -138,7 +138,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // DELETE: api/Movies/movieId
-    [HttpDelete("{movieId}")]
+    [HttpDelete("{movieId:int}")]
     public async Task<IActionResult> DeleteMovie(int movieId)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);

@@ -23,7 +23,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // GET: api/Genres/5
-    [HttpGet("{genreId}")]
+    [HttpGet("{genreId:int}")]
     public async Task<ActionResult<GenreDTO>> GetGenre(int genreId)
     {
         Genre? genreEntity = await repository.GetGenreAsync(genreId);
@@ -38,7 +38,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
 
     // PUT: api/Movies/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{genreId}")]
+    [HttpPut("{genreId:int}")]
     public async Task<IActionResult> UpdateGenre(int genreId, GenreUpdateDTO genre)
     {
         Genre? genreEntity = await repository.GetGenreAsync(genreId);
@@ -67,7 +67,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction("GetGenre", new { genreId = createdGenreDTO.Id }, createdGenreDTO);
     }
 
-    [HttpPatch("{genreId}")]
+    [HttpPatch("{genreId:int}")]
     public async Task<ActionResult> PartiallyUpdateGenre(int genreId, [FromBody] JsonPatchDocument<GenreUpdateDTO> patchDocument)
     {
         Genre? genreEntity = await repository.GetGenreAsync(genreId);
@@ -85,12 +85,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
             ModelState.AddModelError(key, jsonPatchError.ErrorMessage);
         });
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if (!TryValidateModel(genrePatch))
+        if (!ModelState.IsValid || !TryValidateModel(genrePatch))
         {
             return BadRequest(ModelState);
         }
@@ -101,7 +96,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // DELETE: api/Genres/5
-    [HttpDelete("{genreId}")]
+    [HttpDelete("{genreId:int}")]
     public async Task<IActionResult> DeleteGenre(int genreId)
     {
         Genre? genreEntity = await repository.GetGenreAsync(genreId);
@@ -117,7 +112,7 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
         return NoContent();
     }
 
-    [HttpPost("{movieId}/genres")]
+    [HttpPost("{movieId:int}/genres")]
     public async Task<IActionResult> AddGenresToMovie(int movieId, List<int> genreIds)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);

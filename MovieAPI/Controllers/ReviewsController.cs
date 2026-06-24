@@ -26,10 +26,10 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
     }
 
     // GET: api/Reviews/5
-    [HttpGet("{reviewID}")]
-    public async Task<ActionResult<ReviewDTO>> GetReview(int reviewID)
+    [HttpGet("{reviewId:int}")]
+    public async Task<ActionResult<ReviewDTO>> GetReview(int reviewId)
     {
-        Review? reviewEntity = await repository.GetReviewAsync(reviewID);
+        Review? reviewEntity = await repository.GetReviewAsync(reviewId);
 
         if (reviewEntity == null)
         {
@@ -41,7 +41,7 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
 
     // PUT: api/Reviews/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{reviewId}")]
+    [HttpPut("{reviewId:int}")]
     public async Task<IActionResult> UpdateReview(int reviewId, ReviewUpdateDTO review)
     {
         Review? reviewEntity = await repository.GetReviewAsync(reviewId);
@@ -72,10 +72,10 @@ public class ReviewsController(MovieInfoRepository repository, IMapper mapper) :
     }
 
     // DELETE: api/Reviews/5
-    [HttpDelete("{reviewId}")]
+    [HttpDelete("{reviewId:int}")]
     public async Task<IActionResult> DeleteReview(int reviewId)
     {
-        var review = await repository.GetReviewAsync(reviewId);
+        Review? review = await repository.GetReviewAsync(reviewId);
         if (review == null)
         {
             return NotFound();
