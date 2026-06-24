@@ -161,8 +161,7 @@ public class MovieInfoRepository(MovieAPIContext context)
 
     public void CreateMovieDetails(MovieDetails details, Movie movieEntity)
     {
-        movieEntity.MovieDetailsId = details.Id;
-        
+        movieEntity.MovieDetails = details;  // EF auto-sets MovieDetailsId
         details.MovieId = movieEntity.Id;
         context.Add(details);
     }
@@ -189,5 +188,10 @@ public class MovieInfoRepository(MovieAPIContext context)
     public void DeleteSetting(Setting setting)
     {
         context.Remove(setting);
+    }
+
+    public void DeleteMovieDetails(MovieDetails movieDetails)
+    {
+        context.Remove(movieDetails);
     }
 }

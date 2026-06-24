@@ -133,3 +133,6 @@ DELETE {{baseUrl}}/api/actors/{{actorId}}
 
 ### Delete genre
 DELETE {{baseUrl}}/api/genres/{{genreId}}
+
+### Delete movieDetails
+DELETE {{baseUrl}}/api/movies/details/2

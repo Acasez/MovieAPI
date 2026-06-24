@@ -29,7 +29,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (movieEntity == null)
         {
-            return NotFound();
+            return NotFound("Movie not found");
         }
 
         return Ok(mapper.Map<MovieDTO>(movieEntity));
@@ -44,7 +44,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (movieEntity == null)
         {
-            return NotFound();
+            return NotFound("Movie not found");
         }
 
         mapper.Map(movie, movieEntity);
@@ -122,12 +122,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
             ModelState.AddModelError(key, jsonPatchError.ErrorMessage);
         });
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if (!TryValidateModel(moviePatch))
+        if (!ModelState.IsValid || !TryValidateModel(moviePatch))
         {
             return BadRequest(ModelState);
         }
@@ -145,7 +140,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (movieEntity == null)
         {
-            return NotFound();
+            return NotFound("Movie not found");
         }
 
         repository.DeleteMovie(movieEntity);
@@ -160,18 +155,33 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
         if (movieEntity == null)
         {
-            return NotFound();
+            return NotFound("Movie not found");
         }
-        int movieDetailsId = movieEntity.MovieDetailsId;
-        MovieDetails? movieDetails = await repository.GetMovieDetailsAsync(movieDetailsId);
+        MovieDetails? movieDetails = movieEntity.MovieDetails;
         if (movieDetails == null)
         {
-            return NotFound();
+            return NotFound("Movie details not found");
         }
-        
+
         return Ok(new {
             Movie = mapper.Map<MovieDTO>(movieEntity),
             Details = mapper.Map<MovieDetailsDTO>(movieDetails)
         });
+    }
+    
+    [HttpDelete("details/{movieDetailsId:int}")]
+    public async Task<IActionResult> DeleteMovieDetails(int movieDetailsId)
+    {
+        MovieDetails? movieDetails = await repository.GetMovieDetailsAsync(movieDetailsId);
+
+        if (movieDetails == null)
+        {
+            return NotFound();
+        }
+
+        repository.DeleteMovieDetails(movieDetails);
+        await repository.SaveChangesAsync();
+
+        return NoContent();
     }
 }

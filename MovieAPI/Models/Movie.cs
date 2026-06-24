@@ -7,7 +7,8 @@ public class Movie
     public int Year { get; set; }
     //In minutes
     public int Duration { get; set; }
-    public int MovieDetailsId { get; set; }
+    //public int MovieDetailsId { get; set; }
+    public MovieDetails? MovieDetails { get; set; }
     // Foreign key and navigation property
     public int GenreId { get; set; }
     public int Setting { get; set; }
