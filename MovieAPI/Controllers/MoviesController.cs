@@ -86,7 +86,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction(actionName: "GetActor", controllerName: "Actors",
             routeValues: new { actorId = createdActorDto.Id },value: createdActorDto);
     }
-    [HttpPost("{movieId:int}/details")]  // Create actor in movie
+    [HttpPost("{movieId:int}/details")]  // Create movieDetails
     public async Task<ActionResult<ActorDTO>> CreateMovieDetails(MovieDetailsCreateDTO movieDetailsToCreate, int movieId)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
