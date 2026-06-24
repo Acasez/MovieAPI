@@ -38,7 +38,7 @@ Content-Type: application/json
 
 {
   "name": "Slice of life",
-  "description": "Chill vibes",
+  "description": "Chill vibes"
 }
 
 ### Create movie
