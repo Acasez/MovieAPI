@@ -165,10 +165,19 @@ public class MovieInfoRepository(MovieAPIContext context)
         details.MovieId = movieEntity.Id;
         context.Add(details);
     }
+    
+    public async Task<IEnumerable<MovieDetails>> GetMovieDetailsAsync()
+    {
+        return await context.MovieDetails.OrderBy(md => md.MovieId).ToListAsync();
+    }
 
-    public async Task<MovieDetails?> GetMovieDetailsAsync(int movieDetailsId)
+    public async Task<MovieDetails?> GetMovieDetailAsync(int movieDetailsId)
     {
         return await context.MovieDetails.Where(md => md.Id == movieDetailsId).FirstOrDefaultAsync();
+    }
+    public async Task<MovieDetails?> GetMovieDetailByMovieIdAsync(int movieId)
+    {
+        return await context.MovieDetails.Where(md => md.MovieId == movieId).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Setting>> GetSettingsAsync()

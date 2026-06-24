@@ -137,7 +137,6 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     public async Task<IActionResult> DeleteMovie(int movieId)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
-
         if (movieEntity == null)
         {
             return NotFound("Movie not found");
@@ -157,10 +156,10 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         {
             return NotFound("Movie not found");
         }
-        MovieDetails? movieDetails = movieEntity.MovieDetails;
+        MovieDetails? movieDetails = await repository.GetMovieDetailByMovieIdAsync(movieId);
         if (movieDetails == null)
         {
-            return NotFound("Movie details not found");
+            return NotFound("Movie details not found for movie id " + movieId);
         }
 
         return Ok(new {
@@ -172,7 +171,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     [HttpDelete("details/{movieDetailsId:int}")]
     public async Task<IActionResult> DeleteMovieDetails(int movieDetailsId)
     {
-        MovieDetails? movieDetails = await repository.GetMovieDetailsAsync(movieDetailsId);
+        MovieDetails? movieDetails = await repository.GetMovieDetailAsync(movieDetailsId);
 
         if (movieDetails == null)
         {

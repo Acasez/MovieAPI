@@ -12,6 +12,7 @@ public class MovieDTO
     [Range(1900, 2100)]
     public int Year { get; set; }
     public int? GenreId { get; set; }
+    public int? SettingId { get; set; }
     [Range(1, 1000)]
     public int Duration { get; set; }
 }
@@ -24,6 +25,7 @@ public class MovieCreateDTO
     [Range(1900, 2100)]
     public int? Year { get; set; }
     public int? GenreId { get; set; }
+    public int? SettingId { get; set; }
     [Range(1, 1000)]
     public int? Duration { get; set; }
     public List<int>? ActorIds { get; set; }
@@ -37,6 +39,7 @@ public class MovieUpdateDTO
     [Range(1900, 2100)]
     public int? Year { get; set; }
     public int? GenreId { get; set; }
+    public int? SettingId { get; set; }
     [Range(1, 1000)]
     public int? Duration { get; set; }
 }

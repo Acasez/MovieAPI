@@ -11,7 +11,10 @@ public class Movie
     public MovieDetails? MovieDetails { get; set; }
     // Foreign key and navigation property
     public int GenreId { get; set; }
-    public int Setting { get; set; }
+    public Genre? Genre { get; set; }  // Make sure this exists too
+
+    public int SettingId { get; set; }
+    public Setting? Setting { get; set; }  // Add this
     public ICollection<Actor>? Actors { get; set; } = [];
     public ICollection<Review>? Reviews { get; set; } = [];
 }

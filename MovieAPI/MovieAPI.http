@@ -48,6 +48,15 @@ Content-Type: application/json
   "description": "Suspense and intrigue"
 }
 
+### Create setting
+POST {{baseUrl}}/api/Settings
+Content-Type: application/json
+
+{
+  "name": "Contemporary",
+  "description": "In this day and age"
+}
+
 ### Create movie
 POST {{baseUrl}}/api/movies
 Content-Type: application/json
@@ -56,6 +65,7 @@ Content-Type: application/json
   "Title": "Rogue One",
   "Year": 2016,
   "GenreId": 2,
+  "SettingId": 2,
   "Duration": 134
 }
 
