@@ -63,8 +63,8 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.CreateGenre(genre);
         await repository.SaveChangesAsync();
 
-        GenreDTO createdGenreDTO = mapper.Map<GenreDTO>(genre);
-        return CreatedAtAction("GetGenre", new { genreId = createdGenreDTO.Id }, createdGenreDTO);
+        GenreDTO createdGenreDto = mapper.Map<GenreDTO>(genre);
+        return CreatedAtAction("GetGenre", new { genreId = createdGenreDto.Id }, createdGenreDto);
     }
 
     [HttpPatch("{genreId:int}")]

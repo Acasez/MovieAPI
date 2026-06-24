@@ -171,4 +171,23 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         return await context.MovieDetails.Where(md => md.Id == movieDetailsId).FirstOrDefaultAsync();
     }
+
+    public async Task<IEnumerable<Setting>> GetSettingsAsync()
+    {
+        return await context.Settings.OrderBy(s => s.Name).ToListAsync();
+    }
+    
+    public async Task<Setting?> GetSettingAsync(int settingId)
+    {
+        return await context.Settings.Where(s => s.Id == settingId).FirstOrDefaultAsync();
+    }
+
+    public async Task CreateSetting(Setting setting)
+    {
+        context.Add(setting);
+    }
+    public void DeleteSetting(Setting setting)
+    {
+        context.Remove(setting);
+    }
 }
