@@ -37,8 +37,8 @@ POST {{baseUrl}}/api/genres
 Content-Type: application/json
 
 {
-  "name": "Slice of life",
-  "description": "Chill vibes"
+  "name": "Action",
+  "description": "Lots of stuff happening"
 }
 
 ### Create movie
@@ -46,10 +46,10 @@ POST {{baseUrl}}/api/movies
 Content-Type: application/json
 
 {
-   "title": "My Neighbor Totoro",
-   "year": "1988",
-   "genreId": "1",
-   "duration": "86"
+  "Title": "Dunkirk",
+  "Year": 2017,
+  "GenreId": 2,
+  "Duration": 106
 }
 
 ### Create Actor
@@ -57,8 +57,8 @@ POST {{baseUrl}}/api/actors
 Content-Type: application/json
 
 {
-   "name": "Stellan Skarsgård",
-   "YearOfBirth": "1958"
+   "name": "Genevieve O'Reilly",
+   "YearOfBirth": "1977"
 }
 
 ### Create actor in movie
@@ -91,10 +91,10 @@ PUT {{baseUrl}}/api/movies/{{movieId}}
 Content-Type: application/json
 
 {
-    "Title": "Pirates of the Caribbean",
-    "Year": 2003,
-    "Genre": "Adventure",
-    "Duration": 143
+    "Title": "Dunkirk",
+    "Year": 2017,
+    "Genre": "Historical",
+    "Duration": 106
 }
 
 ### Partially update movie (PATCH with JSON Patch - Replace operation)
