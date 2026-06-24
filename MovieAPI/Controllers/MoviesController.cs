@@ -22,7 +22,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // GET: api/Movies/movieId
-    [HttpGet("{movieId}")]
+    [HttpGet("{movieId:int}")]
     public async Task<ActionResult<MovieDTO>> GetMovie(int movieId)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
@@ -97,12 +97,12 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         MovieDetails? details = mapper.Map<MovieDetails>(movieDetailsToCreate);
 
-        await repository.CreateMovieDetails(details, movieEntity);
+        repository.CreateMovieDetails(details, movieEntity);
         await repository.SaveChangesAsync();
 
         MovieDetailsDTO createdDetailsDto = mapper.Map<MovieDetailsDTO>(details);
-        return CreatedAtAction(actionName: "GetDetails", controllerName: "Movies",
-            routeValues: new { actorId = createdDetailsDto.Id },value: createdDetailsDto);
+        return CreatedAtAction(actionName: "GetMovieDetails", controllerName: "Movies",
+            routeValues: new { movieId = movieEntity.Id },value: createdDetailsDto);
     }
 
     [HttpPatch("{movieId}")]
@@ -152,5 +152,26 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    [HttpGet("{movieId:int}/details")]
+    public async Task<ActionResult<MovieDTO>> GetMovieDetails(int movieId)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+        if (movieEntity == null)
+        {
+            return NotFound();
+        }
+        int movieDetailsId = movieEntity.MovieDetailsId;
+        MovieDetails? movieDetails = await repository.GetMovieDetailsAsync(movieDetailsId);
+        if (movieDetails == null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(new {
+            Movie = mapper.Map<MovieDTO>(movieEntity),
+            Details = mapper.Map<MovieDetailsDTO>(movieDetails)
+        });
     }
 }

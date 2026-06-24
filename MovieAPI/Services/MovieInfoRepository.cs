@@ -159,9 +159,16 @@ public class MovieInfoRepository(MovieAPIContext context)
         context.Remove(genreEntity);
     }
 
-    // public static void SetMovieGenre(Movie movieEntity, Genre genre)
-    // {
-    //     movieEntity.Genre = genre;
-    //     movieEntity.GenreId = genre.Id;
-    // }
+    public void CreateMovieDetails(MovieDetails details, Movie movieEntity)
+    {
+        movieEntity.MovieDetailsId = details.Id;
+        
+        details.MovieId = movieEntity.Id;
+        context.Add(details);
+    }
+
+    public async Task<MovieDetails?> GetMovieDetailsAsync(int movieDetailsId)
+    {
+        return await context.MovieDetails.Where(md => md.Id == movieDetailsId).FirstOrDefaultAsync();
+    }
 }
