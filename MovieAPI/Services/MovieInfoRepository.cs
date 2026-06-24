@@ -203,4 +203,9 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         context.Remove(movieDetails);
     }
+
+    public async Task<bool> MovieExistsAsync(int movieId)
+    {
+        return await context.Movie.AnyAsync(m => m.Id == movieId);
+    }
 }

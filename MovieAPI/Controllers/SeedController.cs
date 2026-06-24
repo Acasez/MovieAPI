@@ -30,6 +30,14 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
 
         foreach (IList<object> row in sheetData)
         {
+            int movieId = int.Parse(row[0]?.ToString() ?? "0");
+            // Check if the movie already exists
+            bool movieExists = await repository.MovieExistsAsync(movieId);
+            if (movieExists)
+            {
+                continue; // Skip if it already exists
+            }
+            
             // Map the row data to your MovieCreateDTO
             MovieCreateDTO movieToCreate = new MovieCreateDTO
             {
@@ -54,7 +62,7 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
         GoogleCredential? credential = GoogleCredential.FromFile(credentialsFilePath)
             .CreateScoped(SheetsService.Scope.SpreadsheetsReadonly);
 
-        var service = new SheetsService(new BaseClientService.Initializer
+        SheetsService service = new(new BaseClientService.Initializer
         {
             HttpClientInitializer = credential,
             ApplicationName = "Google Sheets API C#"
