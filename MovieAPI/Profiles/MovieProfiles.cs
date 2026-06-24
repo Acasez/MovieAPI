@@ -16,3 +16,18 @@ public class MovieProfiles : Profile
         CreateMap<Movie, MovieUpdateDTO>();
     }
 }
+
+public class MovieDetailsProfile : Profile
+{
+    public MovieDetailsProfile()
+    {
+        CreateMap<MovieDetails, MovieDetailsCreateDTO>();
+        CreateMap<MovieDetailsCreateDTO, MovieDetails>();
+        CreateMap<MovieDetailsDTO, MovieDetails>();
+        CreateMap<MovieDetails, MovieDetailsDTO>();
+        CreateMap<MovieDetailsUpdateDTO, MovieDetails>();
+        CreateMap<MovieDetails, MovieDetailsUpdateDTO>();
+    }
+}
+
+

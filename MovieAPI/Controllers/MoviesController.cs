@@ -86,6 +86,24 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         return CreatedAtAction(actionName: "GetActor", controllerName: "Actors",
             routeValues: new { actorId = createdActorDto.Id },value: createdActorDto);
     }
+    [HttpPost("{movieId:int}/details")]  // Create actor in movie
+    public async Task<ActionResult<ActorDTO>> CreateMovieDetails(MovieDetailsCreateDTO movieDetailsToCreate, int movieId)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+        if (movieEntity == null)
+        {
+            return NotFound();
+        }
+
+        MovieDetails? details = mapper.Map<MovieDetails>(movieDetailsToCreate);
+
+        await repository.CreateMovieDetails(details, movieEntity);
+        await repository.SaveChangesAsync();
+
+        MovieDetailsDTO createdDetailsDto = mapper.Map<MovieDetailsDTO>(details);
+        return CreatedAtAction(actionName: "GetDetails", controllerName: "Movies",
+            routeValues: new { actorId = createdDetailsDto.Id },value: createdDetailsDto);
+    }
 
     [HttpPatch("{movieId}")]
     public async Task<ActionResult> PartiallyUpdateMovie(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
