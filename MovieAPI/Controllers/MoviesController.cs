@@ -68,7 +68,7 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
     }
 
     // POST: api/Movies/movieId
-    [HttpPost("{movieId}")]  // Create actor in movie
+    [HttpPost("{movieId:int}/actor")]  // Create actor in movie
     public async Task<ActionResult<ActorDTO>> CreateActorInMovie(ActorCreateDTO actorToCreate, int movieId)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
@@ -82,9 +82,9 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.CreateActor(actor, movieEntity);
         await repository.SaveChangesAsync();
 
-        ActorDTO createdActorDTO = mapper.Map<ActorDTO>(actor);
+        ActorDTO createdActorDto = mapper.Map<ActorDTO>(actor);
         return CreatedAtAction(actionName: "GetActor", controllerName: "Actors",
-            routeValues: new { actorId = createdActorDTO.Id },value: createdActorDTO);
+            routeValues: new { actorId = createdActorDto.Id },value: createdActorDto);
     }
 
     [HttpPatch("{movieId}")]

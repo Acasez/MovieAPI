@@ -1,7 +1,8 @@
 @baseUrl = http://localhost:5259
-@movieId = 1
+@movieId = 5
 @actorId = 1010
 @reviewId = 1
+@genreId = 6
 
 ### Get all movies
 GET {{baseUrl}}/api/movies
@@ -32,13 +33,16 @@ GET {{baseUrl}}/api/reviews
 ### Get review by Id
 GET {{baseUrl}}/api/reviews/{{reviewId}}
 
+### Get all genres
+GET {{baseUrl}}/api/genres
+
 ### Create genre
 POST {{baseUrl}}/api/genres
 Content-Type: application/json
 
 {
-  "name": "Action",
-  "description": "Lots of stuff happening"
+  "name": "Thriller",
+  "description": "Suspense and intrigue"
 }
 
 ### Create movie
@@ -46,10 +50,10 @@ POST {{baseUrl}}/api/movies
 Content-Type: application/json
 
 {
-  "Title": "Dunkirk",
-  "Year": 2017,
+  "Title": "Rogue One",
+  "Year": 2016,
   "GenreId": 2,
-  "Duration": 106
+  "Duration": 134
 }
 
 ### Create Actor
@@ -62,12 +66,22 @@ Content-Type: application/json
 }
 
 ### Create actor in movie
-Post {{baseUrl}}/api/movies/{{movieId}}
+POST {{baseUrl}}/api/movies/{{movieId}}/actor
 Content-Type: application/json
 
 {
-   "name": "Diego Luna",
-   "YearOfBirth": "1979"
+   "name": "Alan Tudyk",
+   "YearOfBirth": "1971"
+}
+
+### Create movieDetails
+POST {{baseUrl}}/api/movies/{{movieId}}/details
+Content-Type: application/json
+
+{
+  "synopsis": "Most tense file format exchange",
+  "language": "English",
+  "budget": 240
 }
 
 ### Create Review
@@ -93,7 +107,7 @@ Content-Type: application/json
 {
     "Title": "Dunkirk",
     "Year": 2017,
-    "Genre": "Historical",
+    "GenreId": 3,
     "Duration": 106
 }
 
@@ -113,3 +127,6 @@ DELETE {{baseUrl}}/api/movies/{{movieId}}
 
 ### Delete actor
 DELETE {{baseUrl}}/api/actors/{{actorId}}
+
+### Delete genre
+DELETE {{baseUrl}}/api/genres/{{genreId}}
