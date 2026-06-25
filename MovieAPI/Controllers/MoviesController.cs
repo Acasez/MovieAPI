@@ -183,4 +183,18 @@ public class MoviesController(MovieInfoRepository repository, IMapper mapper) : 
 
         return NoContent();
     }
+    
+    [HttpDelete("All")]
+    public async Task<IActionResult> DeleteAllMovies()
+    {
+        IEnumerable<Movie> movies = await repository.GetMoviesAsync();
+
+        foreach (Movie movie in  movies)
+        {
+            repository.DeleteMovie(movie);
+        }
+        await repository.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

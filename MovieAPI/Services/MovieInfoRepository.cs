@@ -6,7 +6,7 @@ namespace MovieAPI.Services;
 
 public class MovieInfoRepository(MovieAPIContext context)
 {
-    public async Task<IEnumerable<Movie>> GetMoviesAsync(string? name, string? searchQuery)
+    public async Task<IEnumerable<Movie>> GetMoviesAsync(string? name = "", string? searchQuery = "")
     {
         IQueryable<Movie> collection = context.Movie;
 

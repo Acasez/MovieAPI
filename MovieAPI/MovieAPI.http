@@ -141,6 +141,9 @@ Content-Type: application/json-patch+json
 ### Delete movie
 DELETE {{baseUrl}}/api/movies/{{movieId}}
 
+### Delete all movies
+DELETE {{baseUrl}}/api/movies/all
+
 ### Delete actor
 DELETE {{baseUrl}}/api/actors/{{actorId}}
 

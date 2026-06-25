@@ -43,7 +43,9 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
             };
 
             // Use your existing CreateMovie logic
-            Movie? existingMovie = await repository.GetMovieAsync(movieId);    
+            // Check if a movie with the same title already exists
+            IEnumerable<Movie> existingMovies = await repository.GetMoviesAsync(name: movieToCreate.Title, searchQuery: null);
+            Movie? existingMovie = existingMovies.FirstOrDefault();  
             if (existingMovie != null)
             {
                 // Update existing movie
