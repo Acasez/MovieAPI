@@ -4,10 +4,10 @@
 @reviewId = 1
 @genreId = 6
 
-### Seed movies from gogole sheet
+### Seed movies from google sheet
 POST {{baseUrl}}/api/seed/Seed Movies
 
-### Seed actors from gogole sheet
+### Seed actors from google sheet
 POST {{baseUrl}}/api/seed/Seed Actors
 
 ### Get all movies

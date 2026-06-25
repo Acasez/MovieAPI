@@ -44,7 +44,7 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
             else
             {
                 TEntity entity = mapDtoToEntity(dto);
-                repository.CreateEntity(entity); // Or use your repository's Create method
+                repository.CreateEntity(entity);
             }
         }
 
@@ -60,12 +60,12 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
             mapRowToDto: row => new MovieCreateDTO
             {
                 Title = row[1]?.ToString() ?? string.Empty,
-                Year = int.TryParse(row[2]?.ToString(), out int year) ? year : 0,
+                Year = int.TryParse(row[2].ToString(), out int year) ? year : 0,
                 Duration = int.TryParse(row[3]?.ToString(), out int duration) ? duration : 0,
                 GenreId = int.TryParse(row[4]?.ToString(), out int genreId) ? genreId : 0,
                 SettingId = int.TryParse(row[5]?.ToString(), out int settingId) ? settingId : 0,
             },
-            getExistingEntities: async (dto) => await repository.GetMoviesAsync(name: dto.Title, searchQuery: null),
+            getExistingEntities: async dto => await repository.GetMoviesAsync(name: dto.Title, searchQuery: null),
             mapDtoToEntity: mapper.Map<Movie>,
             updateEntity: (entity, dto) => mapper.Map(dto, entity)
         );
@@ -74,17 +74,67 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
     [HttpPost("Seed Actors")]
     public async Task<IActionResult> SeedActors()
     {
-        return await SeedEntities<Actor, ActorCreateDTO, ActorDTO>(
-            sheetName: "Actors",
-            mapRowToDto: row => new ActorCreateDTO
+        List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, "Actors", CredentialsFilePath);
+
+        // Skip header row if present
+        if (sheetData.Count > 0 && sheetData[0][0]?.ToString() == "Id")
+        {
+            sheetData.RemoveAt(0);
+        }
+
+        foreach (IList<object> row in sheetData)
+        {
+            // Map the row to ActorCreateDTO
+            ActorCreateDTO actorToCreate = new()
             {
-                Name = row[1]?.ToString() ?? string.Empty,
-                YearOfBirth = int.TryParse(row[2]?.ToString(), out int year) ? year : 0
-            },
-            getExistingEntities: async (dto) => await repository.GetActorsAsync(name: dto.Name, searchQuery: null),
-            mapDtoToEntity: mapper.Map<Actor>,
-            updateEntity: (entity, dto) => mapper.Map(dto, entity)
-        );
+                Name = row[1].ToString() ?? string.Empty,
+                YearOfBirth = int.TryParse(row[2].ToString(), out int year) ? year : 0
+            };
+
+            // Check if the actor already exists
+            IEnumerable<Actor> existingActors = await repository.GetActorsAsync(name: actorToCreate.Name, searchQuery: null);
+            Actor? existingActor = existingActors.FirstOrDefault();
+
+            // Create or update the actor
+            Actor actor;
+            if (existingActor != null)
+            {
+                mapper.Map(actorToCreate, existingActor);
+                actor = existingActor;
+            }
+            else
+            {
+                actor = mapper.Map<Actor>(actorToCreate);
+                await repository.CreateActor(actor);
+            }
+
+            // Handle the Movies column (e.g., "Rogue One, Dead Man's Chest")
+            string? moviesString = row[3].ToString() ?? string.Empty;
+            if (string.IsNullOrEmpty(moviesString)) continue;
+            // Split the movies string by commas and trim whitespace
+            List<string> movieTitles = moviesString.Split(',')
+                .Select(title => title.Trim())
+                .Where(title => !string.IsNullOrEmpty(title))
+                .ToList();
+
+            // For each movie title, find the movie and link the actor
+            foreach (string movieTitle in movieTitles)
+            {
+                IEnumerable<Movie> movies = await repository.GetMoviesAsync(name: movieTitle, searchQuery: null);
+                Movie? movie = movies.FirstOrDefault();
+
+                if (movie == null) continue;
+                // Add the actor to the movie's Actors collection
+                movie.Actors ??= new List<Actor>();
+                if (!movie.Actors.Contains(actor))
+                {
+                    movie.Actors.Add(actor);
+                }
+            }
+        }
+
+        await repository.SaveChangesAsync();
+        return Ok("Actors and their movies seeded successfully!");
     }
 
     private static async Task<List<IList<object>>> GetSheetDataAsync(string spreadsheetId, string sheetName, string credentialsFilePath)
