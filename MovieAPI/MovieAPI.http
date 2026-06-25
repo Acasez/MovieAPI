@@ -4,7 +4,7 @@
 @reviewId = 1
 @genreId = 6
 
-### Seed from gogole sheet
+### Seed movies from gogole sheet
 POST {{baseUrl}}/api/seed/Seed Movies
 
 ### Get all movies

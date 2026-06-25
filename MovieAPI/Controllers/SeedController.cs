@@ -31,26 +31,30 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
         foreach (IList<object> row in sheetData)
         {
             int movieId = int.Parse(row[0]?.ToString() ?? "0");
-            // Check if the movie already exists
-            bool movieExists = await repository.MovieExistsAsync(movieId);
-            if (movieExists)
-            {
-                continue; // Skip if it already exists
-            }
             
             // Map the row data to your MovieCreateDTO
-            MovieCreateDTO movieToCreate = new MovieCreateDTO
+            MovieCreateDTO movieToCreate = new()
             {
                 Title = row[1]?.ToString() ?? string.Empty,
                 Year = int.TryParse(row[2]?.ToString(), out int year) ? year : 0,
                 Duration = int.TryParse(row[3]?.ToString(), out int duration) ? duration : 0,
                 GenreId = int.TryParse(row[4]?.ToString(), out int genreId) ? genreId : 0,
-                // Add other properties as needed (e.g., ActorIds if present in the sheet)
+                SettingId = int.TryParse(row[5]?.ToString(), out int settingId) ? settingId : 0,
             };
 
             // Use your existing CreateMovie logic
-            Movie? movie = mapper.Map<Movie>(movieToCreate);
-            await repository.CreateMovie(movie, movieToCreate);
+            Movie? existingMovie = await repository.GetMovieAsync(movieId);    
+            if (existingMovie != null)
+            {
+                // Update existing movie
+                mapper.Map(movieToCreate, existingMovie);
+            }
+            else
+            {
+                // Insert new movie
+                Movie? movie = mapper.Map<Movie>(movieToCreate);
+                await repository.CreateMovie(movie, movieToCreate);
+            }
         }
 
         await repository.SaveChangesAsync();
