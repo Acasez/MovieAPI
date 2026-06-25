@@ -208,4 +208,9 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         return await context.Movie.AnyAsync(m => m.Id == movieId);
     }
+
+    public void CreateEntity<TEntity>(TEntity entity)
+    {
+        if (entity != null) context.Add(entity);
+    }
 }
