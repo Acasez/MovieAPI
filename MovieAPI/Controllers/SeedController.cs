@@ -30,8 +30,6 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
 
         foreach (IList<object> row in sheetData)
         {
-            int movieId = int.Parse(row[0]?.ToString() ?? "0");
-            
             // Map the row data to your MovieCreateDTO
             MovieCreateDTO movieToCreate = new()
             {
@@ -61,6 +59,47 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
 
         await repository.SaveChangesAsync();
         return Ok("Movies seeded successfully!");
+    }
+    
+    [HttpPost("Seed Actors")]
+    public async Task<IActionResult> SeedActors()
+    {
+        List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, "Actors", CredentialsFilePath);
+
+        // Skip header row if present
+        if (sheetData.Count > 0 && sheetData[0][0]?.ToString() == "Id")
+        {
+            sheetData.RemoveAt(0);
+        }
+
+        foreach (IList<object> row in sheetData)
+        {
+            // Map the row data to your MovieCreateDTO
+            ActorCreateDTO actorToCreate = new()
+            {
+                Name = row[1]?.ToString() ?? string.Empty,
+                YearOfBirth = int.TryParse(row[2]?.ToString(), out int year) ? year : 0
+            };
+
+            // Use your existing CreateMovie logic
+            // Check if a movie with the same title already exists
+            IEnumerable<Actor> fittingActors = await repository.GetActorsAsync(name: actorToCreate.Name, searchQuery: null);
+            Actor? fittingActor = fittingActors.FirstOrDefault();  
+            if (fittingActor != null)
+            {
+                // Update existing movie
+                mapper.Map(actorToCreate, fittingActor);
+            }
+            else
+            {
+                // Insert new movie
+                Actor? actor = mapper.Map<Actor>(actorToCreate);
+                await repository.CreateActor(actor);
+            }
+        }
+
+        await repository.SaveChangesAsync();
+        return Ok("Actors seeded successfully!");
     }
 
     private static async Task<List<IList<object>>> GetSheetDataAsync(string spreadsheetId, string sheetName, string credentialsFilePath)

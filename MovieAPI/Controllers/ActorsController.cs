@@ -30,7 +30,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (actorEntity == null)
         {
-            return NotFound();
+            return NotFound("Actor not found");
         }
 
         return Ok(mapper.Map<ActorDTO>(actorEntity));
@@ -45,7 +45,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (actorEntity == null)
         {
-            return NotFound();
+            return NotFound("Actor not found");
         }
 
         mapper.Map(actor, actorEntity);
@@ -63,8 +63,8 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
         await repository.CreateActor(actor);
         await repository.SaveChangesAsync();
 
-        ActorDTO createdActorDTO = mapper.Map<ActorDTO>(actor);
-        return CreatedAtAction("GetActor", new { actorId = createdActorDTO.Id }, createdActorDTO);
+        ActorDTO createdActorDto = mapper.Map<ActorDTO>(actor);
+        return CreatedAtAction("GetActor", new { actorId = createdActorDto.Id }, createdActorDto);
     }
 
     [HttpPatch("{actorId:int}")]
@@ -74,7 +74,7 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (actorEntity == null)
         {
-            return NotFound();
+            return NotFound("Actor not found");
         }
 
         ActorUpdateDTO actorPatch = mapper.Map<ActorUpdateDTO>(actorEntity);
@@ -103,10 +103,24 @@ public class ActorsController(MovieInfoRepository repository, IMapper mapper) : 
 
         if (actorEntity == null)
         {
-            return NotFound();
+            return NotFound("Actor not found");
         }
 
         repository.DeleteActor(actorEntity);
+        await repository.SaveChangesAsync();
+
+        return NoContent();
+    }
+    
+    [HttpDelete("All")]
+    public async Task<IActionResult> DeleteAllActors()
+    {
+        IEnumerable<Actor> actors = await repository.GetActorsAsync();
+
+        foreach (Actor actor in actors)
+        {
+            repository.DeleteActor(actor);
+        }
         await repository.SaveChangesAsync();
 
         return NoContent();

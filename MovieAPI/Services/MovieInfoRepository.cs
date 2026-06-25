@@ -73,7 +73,7 @@ public class MovieInfoRepository(MovieAPIContext context)
         context.Remove(actorEntity);
     }
     
-    public async Task<IEnumerable<Actor>> GetActorsAsync(string? name, string? searchQuery)
+    public async Task<IEnumerable<Actor>> GetActorsAsync(string? name = "", string? searchQuery = "")
     {
         IQueryable<Actor> collection = context.Actor;
 

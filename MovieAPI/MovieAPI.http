@@ -7,6 +7,9 @@
 ### Seed movies from gogole sheet
 POST {{baseUrl}}/api/seed/Seed Movies
 
+### Seed actors from gogole sheet
+POST {{baseUrl}}/api/seed/Seed Actors
+
 ### Get all movies
 GET {{baseUrl}}/api/movies
 
@@ -114,7 +117,8 @@ Content-Type: application/json
 ### Add Actor to Movie
 POST {{baseUrl}}/api/actors/{{movieId}}/actors
 Content-Type: application/json
-[1007] // IDs of actors to add
+// IDs of actors to add
+[1007] 
 
 ### Update movie (full update with PUT)
 PUT {{baseUrl}}/api/movies/{{movieId}}
@@ -130,6 +134,7 @@ Content-Type: application/json
 ### Partially update movie (PATCH with JSON Patch - Replace operation)
 PATCH {{baseUrl}}/api/movies/{{movieId}}
 Content-Type: application/json-patch+json
+
 [
   {
     "op": "replace",
@@ -146,6 +151,9 @@ DELETE {{baseUrl}}/api/movies/all
 
 ### Delete actor
 DELETE {{baseUrl}}/api/actors/{{actorId}}
+
+### Delete all actors
+DELETE {{baseUrl}}/api/actors/all
 
 ### Delete genre
 DELETE {{baseUrl}}/api/genres/{{genreId}}
