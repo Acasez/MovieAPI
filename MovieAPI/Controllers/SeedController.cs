@@ -17,33 +17,34 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
     private const string SpreadsheetId = "11s2lLlNAWnHhhpyIxO4nm5htyaNtvoQYOgvivIzggyw";
     private const string CredentialsFilePath = "C:/Users/Edvin/Documents/GoogleAPI/GoogleAPI.json";
     
-    private async Task<IActionResult> SeedEntities<TEntity, TCreateDto, TSearchDto>(
+    private async Task<IActionResult> SeedEntities<TEntity, TCreateDto>(
         string sheetName,
-        Func<IList<object>, TCreateDto> mapRowToDto,
+        Func<IList<object>, Task<TCreateDto>> mapRowToDto, // Now async
         Func<TCreateDto, Task<IEnumerable<TEntity>>> getExistingEntities,
-        Func<TCreateDto, TEntity> mapDtoToEntity,
-        Action<TEntity, TCreateDto> updateEntity)
+        Func<TCreateDto, Task<TEntity>> mapDtoToEntity, // Now async
+        Func<TEntity, TCreateDto, Task> updateEntity) // Now async
     {
         List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, sheetName, CredentialsFilePath);
 
         // Skip header row if present
-        if (sheetData.Count > 0 && sheetData[0][0]?.ToString() == "Id")
+        if (sheetData.Count > 0 && sheetData[0][0].ToString() == "Id")
         {
             sheetData.RemoveAt(0);
         }
 
-        foreach (TCreateDto? dto in sheetData.Select(mapRowToDto))
+        foreach (IList<object> row in sheetData)
         {
+            TCreateDto dto = await mapRowToDto(row);
             IEnumerable<TEntity> existingEntities = await getExistingEntities(dto);
             TEntity? existingEntity = existingEntities.FirstOrDefault();
 
             if (existingEntity != null)
             {
-                updateEntity(existingEntity, dto);
+                await updateEntity(existingEntity, dto);
             }
             else
             {
-                TEntity entity = mapDtoToEntity(dto);
+                TEntity entity = await mapDtoToEntity(dto);
                 repository.CreateEntity(entity);
             }
         }
@@ -55,19 +56,45 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
     [HttpPost("Seed Movies")]
     public async Task<IActionResult> SeedMovies()
     {
-        return await SeedEntities<Movie, MovieCreateDTO, MovieDTO>(
+        return await SeedEntities<Movie, MovieCreateDTO>(
             sheetName: "Movies",
-            mapRowToDto: row => new MovieCreateDTO
+            mapRowToDto: async row =>
             {
-                Title = row[1]?.ToString() ?? string.Empty,
-                Year = int.TryParse(row[2].ToString(), out int year) ? year : 0,
-                Duration = int.TryParse(row[3]?.ToString(), out int duration) ? duration : 0,
-                GenreId = int.TryParse(row[4]?.ToString(), out int genreId) ? genreId : 0,
-                SettingId = int.TryParse(row[5]?.ToString(), out int settingId) ? settingId : 0,
+                Genre? genre = await repository.GetGenreAsync(row[4].ToString());
+                Setting? setting = await repository.GetSettingAsync(row[5].ToString());
+
+                return new MovieCreateDTO
+                {
+                    Title = row[1].ToString() ?? string.Empty,
+                    Year = int.TryParse(row[2].ToString(), out int year) ? year : 0,
+                    Duration = int.TryParse(row[3].ToString(), out int duration) ? duration : 0,
+                    GenreId = genre?.Id ?? 7,
+                    SettingId = setting?.Id ?? 7,
+                };
             },
             getExistingEntities: async dto => await repository.GetMoviesAsync(name: dto.Title, searchQuery: null),
-            mapDtoToEntity: mapper.Map<Movie>,
-            updateEntity: (entity, dto) => mapper.Map(dto, entity)
+            mapDtoToEntity: dto =>
+            {
+                try
+                {
+                    return Task.FromResult(mapper.Map<Movie>(dto));
+                }
+                catch (Exception exception)
+                {
+                    return Task.FromException<Movie>(exception);
+                }
+            }, 
+            updateEntity: (entity, dto) =>
+            {
+                try
+                {
+                    return Task.FromResult(mapper.Map(dto, entity));
+                }
+                catch (Exception exception)
+                {
+                    return Task.FromException(exception);
+                }
+            }
         );
     }
     
@@ -77,7 +104,7 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
         List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, "Actors", CredentialsFilePath);
 
         // Skip header row if present
-        if (sheetData.Count > 0 && sheetData[0][0]?.ToString() == "Id")
+        if (sheetData.Count > 0 && sheetData[0][0].ToString() == "Id")
         {
             sheetData.RemoveAt(0);
         }
@@ -140,16 +167,32 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
     [HttpPost("Seed Genres")]
     public async Task<IActionResult> SeedGenres()
     {
-        return await SeedEntities<Genre, GenreCreateDTO, GenreDTO>(
+        return await SeedEntities<Genre, GenreCreateDTO>(
             sheetName: "Genres",
-            mapRowToDto: row => new GenreCreateDTO
+            mapRowToDto: row => Task.FromResult(new GenreCreateDTO
             {
-                Name = row[1]?.ToString() ?? string.Empty,
-                Description = row[2]?.ToString() ?? string.Empty,
-            },
+                Name = row[1].ToString() ?? string.Empty,
+                Description = row[2].ToString() ?? string.Empty,
+            }),
             getExistingEntities: async dto => await repository.GetGenresAsync(),
-            mapDtoToEntity: mapper.Map<Genre>,
-            updateEntity: (entity, dto) => mapper.Map(dto, entity)
+            mapDtoToEntity: dto => Task.FromResult(mapper.Map<Genre>(dto)),
+            updateEntity: (entity, dto) => Task.CompletedTask // If mapper.Map is sync
+        );
+    }
+    
+    [HttpPost("Seed Settings")]
+    public async Task<IActionResult> SeedSettings()
+    {
+        return await SeedEntities<Setting, SettingCreateDTO>(
+            sheetName: "Settings",
+            mapRowToDto: row => Task.FromResult(new SettingCreateDTO()
+            {
+                Name = row[1].ToString() ?? string.Empty,
+                Description = row[2].ToString() ?? string.Empty,
+            }),
+            getExistingEntities: async dto => await repository.GetSettingsAsync(),
+            mapDtoToEntity: dto => Task.FromResult(mapper.Map<Setting>(dto)),
+            updateEntity: (entity, dto) => Task.CompletedTask
         );
     }
 

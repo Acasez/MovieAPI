@@ -148,6 +148,11 @@ public class MovieInfoRepository(MovieAPIContext context)
     {
         return await context.Genre.Where(g => g.Id == genreId).FirstOrDefaultAsync();
     }
+    
+    public async Task<Genre?> GetGenreAsync(string? genreName)
+    {
+        return await context.Genre.Where(g => g.Name == genreName).FirstOrDefaultAsync();
+    }
 
     public async Task CreateGenre(Genre genre)
     {
@@ -188,6 +193,11 @@ public class MovieInfoRepository(MovieAPIContext context)
     public async Task<Setting?> GetSettingAsync(int settingId)
     {
         return await context.Settings.Where(s => s.Id == settingId).FirstOrDefaultAsync();
+    }
+    
+    public async Task<Setting?> GetSettingAsync(string? settingName)
+    {
+        return await context.Settings.Where(g => g.Name == settingName).FirstOrDefaultAsync();
     }
 
     public async Task CreateSetting(Setting setting)

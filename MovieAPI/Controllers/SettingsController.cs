@@ -111,6 +111,20 @@ public class SettingsController(MovieInfoRepository repository, IMapper mapper) 
 
         return NoContent();
     }
+    
+    [HttpDelete("All")]
+    public async Task<IActionResult> DeleteAllSettings()
+    {
+        IEnumerable<Setting> settings = await repository.GetSettingsAsync();
+
+        foreach (Setting setting in settings)
+        {
+            repository.DeleteSetting(setting);
+        }
+        await repository.SaveChangesAsync();
+
+        return NoContent();
+    }
 
     [HttpPost("{movieId:int}/settings")]
     public async Task<IActionResult> AddSettingsToMovie(int movieId, List<int> settingIds)

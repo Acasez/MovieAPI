@@ -35,6 +35,19 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
 
         return Ok(mapper.Map<GenreDTO>(genreEntity));
     }
+    
+    [HttpGet("{genreName}")]
+    public async Task<ActionResult<GenreDTO>> GetGenreByNameAsync(string genreName)
+    {
+        Genre? genreEntity = await repository.GetGenreAsync(genreName);
+
+        if (genreEntity == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(mapper.Map<GenreDTO>(genreEntity));
+    }
 
     // PUT: api/Movies/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

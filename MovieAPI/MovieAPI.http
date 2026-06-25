@@ -52,6 +52,9 @@ GET {{baseUrl}}/api/reviews/{{reviewId}}
 ### Get all genres
 GET {{baseUrl}}/api/genres
 
+### Get all settings
+GET {{baseUrl}}/api/settings
+
 ### Create genre
 POST {{baseUrl}}/api/genres
 Content-Type: application/json
