@@ -111,6 +111,20 @@ public class GenresController(MovieInfoRepository repository, IMapper mapper) : 
 
         return NoContent();
     }
+    
+    [HttpDelete("All")]
+    public async Task<IActionResult> DeleteAllGenres()
+    {
+        IEnumerable<Genre> genres = await repository.GetGenresAsync();
+
+        foreach (Genre genre in genres)
+        {
+            repository.DeleteGenre(genre);
+        }
+        await repository.SaveChangesAsync();
+
+        return NoContent();
+    }
 
     [HttpPost("{movieId:int}/genres")]
     public async Task<IActionResult> AddGenresToMovie(int movieId, List<int> genreIds)

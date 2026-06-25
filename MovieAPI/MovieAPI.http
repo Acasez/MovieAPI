@@ -3,12 +3,19 @@
 @actorId = 1010
 @reviewId = 1
 @genreId = 6
+@settingId = 1
 
 ### Seed movies from google sheet
 POST {{baseUrl}}/api/seed/Seed Movies
 
 ### Seed actors from google sheet
 POST {{baseUrl}}/api/seed/Seed Actors
+
+### Seed genres from google sheet
+POST {{baseUrl}}/api/seed/Seed Genres
+
+### Seed settings from google sheet
+POST {{baseUrl}}/api/seed/Seed Settings
 
 ### Get all movies
 GET {{baseUrl}}/api/movies
@@ -158,5 +165,14 @@ DELETE {{baseUrl}}/api/actors/all
 ### Delete genre
 DELETE {{baseUrl}}/api/genres/{{genreId}}
 
+### Delete all genres
+DELETE {{baseUrl}}/api/genres/all
+
 ### Delete movieDetails
 DELETE {{baseUrl}}/api/movies/details/2
+
+### Delete settings
+DELETE {{baseUrl}}/api/Settings/{{settingId}}
+
+### Delete all settings
+DELETE {{baseUrl}}/api/settings/all

@@ -109,7 +109,7 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
             }
 
             // Handle the Movies column (e.g., "Rogue One, Dead Man's Chest")
-            string? moviesString = row[3].ToString() ?? string.Empty;
+            string moviesString = row[3].ToString() ?? string.Empty;
             if (string.IsNullOrEmpty(moviesString)) continue;
             // Split the movies string by commas and trim whitespace
             List<string> movieTitles = moviesString.Split(',')
@@ -135,6 +135,22 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
 
         await repository.SaveChangesAsync();
         return Ok("Actors and their movies seeded successfully!");
+    }
+    
+    [HttpPost("Seed Genres")]
+    public async Task<IActionResult> SeedGenres()
+    {
+        return await SeedEntities<Genre, GenreCreateDTO, GenreDTO>(
+            sheetName: "Genres",
+            mapRowToDto: row => new GenreCreateDTO
+            {
+                Name = row[1]?.ToString() ?? string.Empty,
+                Description = row[2]?.ToString() ?? string.Empty,
+            },
+            getExistingEntities: async dto => await repository.GetGenresAsync(),
+            mapDtoToEntity: mapper.Map<Genre>,
+            updateEntity: (entity, dto) => mapper.Map(dto, entity)
+        );
     }
 
     private static async Task<List<IList<object>>> GetSheetDataAsync(string spreadsheetId, string sheetName, string credentialsFilePath)
