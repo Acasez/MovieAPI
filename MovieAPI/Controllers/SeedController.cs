@@ -19,15 +19,15 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
     
     private async Task<IActionResult> SeedEntities<TEntity, TCreateDto>(
         string sheetName,
-        Func<IList<object>, Task<TCreateDto>> mapRowToDto, // Now async
+        Func<IList<object>, Task<TCreateDto>> mapRowToDto,
         Func<TCreateDto, Task<IEnumerable<TEntity>>> getExistingEntities,
-        Func<TCreateDto, Task<TEntity>> mapDtoToEntity, // Now async
-        Func<TEntity, TCreateDto, Task> updateEntity) // Now async
+        Func<TCreateDto, TEntity> mapDtoToEntity, // Now synchronous
+        Action<TEntity, TCreateDto> updateEntity) // Now synchronous
     {
         List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, sheetName, CredentialsFilePath);
 
         // Skip header row if present
-        if (sheetData.Count > 0 && sheetData[0][0].ToString() == "Id")
+        if (sheetData.Count > 0 && sheetData[0][0]?.ToString() == "Id")
         {
             sheetData.RemoveAt(0);
         }
@@ -40,11 +40,11 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
 
             if (existingEntity != null)
             {
-                await updateEntity(existingEntity, dto);
+                updateEntity(existingEntity, dto);
             }
             else
             {
-                TEntity entity = await mapDtoToEntity(dto);
+                TEntity entity = mapDtoToEntity(dto);
                 repository.CreateEntity(entity);
             }
         }
@@ -73,28 +73,8 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
                 };
             },
             getExistingEntities: async dto => await repository.GetMoviesAsync(name: dto.Title, searchQuery: null),
-            mapDtoToEntity: dto =>
-            {
-                try
-                {
-                    return Task.FromResult(mapper.Map<Movie>(dto));
-                }
-                catch (Exception exception)
-                {
-                    return Task.FromException<Movie>(exception);
-                }
-            }, 
-            updateEntity: (entity, dto) =>
-            {
-                try
-                {
-                    return Task.FromResult(mapper.Map(dto, entity));
-                }
-                catch (Exception exception)
-                {
-                    return Task.FromException(exception);
-                }
-            }
+            mapDtoToEntity: mapper.Map<Movie>,
+            updateEntity: (entity, dto) => mapper.Map(dto, entity)
         );
     }
     
@@ -175,8 +155,8 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
                 Description = row[2].ToString() ?? string.Empty,
             }),
             getExistingEntities: async dto => await repository.GetGenresAsync(),
-            mapDtoToEntity: dto => Task.FromResult(mapper.Map<Genre>(dto)),
-            updateEntity: (entity, dto) => Task.CompletedTask // If mapper.Map is sync
+            mapDtoToEntity: mapper.Map<Genre>,
+            updateEntity: (entity, dto) => mapper.Map(dto, entity)
         );
     }
     
@@ -191,8 +171,8 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
                 Description = row[2].ToString() ?? string.Empty,
             }),
             getExistingEntities: async dto => await repository.GetSettingsAsync(),
-            mapDtoToEntity: dto => Task.FromResult(mapper.Map<Setting>(dto)),
-            updateEntity: (entity, dto) => Task.CompletedTask
+            mapDtoToEntity: mapper.Map<Setting>,
+            updateEntity: (entity, dto) => mapper.Map(dto, entity)
         );
     }
 
