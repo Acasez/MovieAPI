@@ -27,7 +27,7 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
         List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, sheetName, CredentialsFilePath);
 
         // Skip header row if present
-        if (sheetData.Count > 0 && sheetData[0][0]?.ToString() == "Id")
+        if (sheetData.Count > 0 && sheetData[0][0].ToString() == "Id")
         {
             sheetData.RemoveAt(0);
         }
@@ -56,21 +56,28 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
     [HttpPost("Seed Movies")]
     public async Task<IActionResult> SeedMovies()
     {
+        // Fetch all genres and settings once for performance
+        IEnumerable<Genre> allGenres = await repository.GetGenresAsync();
+        IEnumerable<Setting> allSettings = await repository.GetSettingsAsync();
+
         return await SeedEntities<Movie, MovieCreateDTO>(
             sheetName: "Movies",
-            mapRowToDto: async row =>
+            mapRowToDto: row =>
             {
-                Genre? genre = await repository.GetGenreAsync(row[4].ToString());
-                Setting? setting = await repository.GetSettingAsync(row[5].ToString());
+                string genreName = row[4].ToString() ?? string.Empty;
+                string settingName = row[5].ToString() ?? string.Empty;
 
-                return new MovieCreateDTO
+                Genre? genre = allGenres.FirstOrDefault(g => g.Name == genreName);
+                Setting? setting = allSettings.FirstOrDefault(s => s.Name == settingName);
+
+                return Task.FromResult(new MovieCreateDTO
                 {
                     Title = row[1].ToString() ?? string.Empty,
                     Year = int.TryParse(row[2].ToString(), out int year) ? year : 0,
                     Duration = int.TryParse(row[3].ToString(), out int duration) ? duration : 0,
                     GenreId = genre?.Id ?? 7,
                     SettingId = setting?.Id ?? 7,
-                };
+                });
             },
             getExistingEntities: async dto => await repository.GetMoviesAsync(name: dto.Title, searchQuery: null),
             mapDtoToEntity: mapper.Map<Movie>,
