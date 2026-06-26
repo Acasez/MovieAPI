@@ -77,11 +77,35 @@ public class SeedController(MovieInfoRepository repository, IMapper mapper) : Co
                     Duration = int.TryParse(row[3].ToString(), out int duration) ? duration : 0,
                     GenreId = genre?.Id ?? 7,
                     SettingId = setting?.Id ?? 7,
+                    Synopsis = row[6].ToString() ?? string.Empty,
+                    Language = row[7].ToString() ?? string.Empty,
+                    Budget = float.TryParse(row[8].ToString(), out float budget) ? budget : 0f
                 });
             },
             getExistingEntities: async dto => await repository.GetMoviesAsync(name: dto.Title, searchQuery: null),
             mapDtoToEntity: mapper.Map<Movie>,
-            updateEntity: (entity, dto) => mapper.Map(dto, entity)
+            updateEntity: (entity, dto) =>
+            {
+                mapper.Map(dto, entity);
+
+                // Handle MovieDetails
+                if (entity.MovieDetails == null)
+                {
+                    entity.MovieDetails = new MovieDetails
+                    {
+                        MovieId = entity.Id,
+                        Synopsis = dto.Synopsis,
+                        Language = dto.Language,
+                        Budget = dto.Budget
+                    };
+                }
+                else
+                {
+                    entity.MovieDetails.Synopsis = dto.Synopsis;
+                    entity.MovieDetails.Language = dto.Language;
+                    entity.MovieDetails.Budget = dto.Budget;
+                }
+            }
         );
     }
     
