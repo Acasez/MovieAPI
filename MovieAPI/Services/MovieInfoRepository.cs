@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
 using MovieAPI.DataTransferObjects;
+using MovieAPI.Interfaces;
 using MovieAPI.Models;
 namespace MovieAPI.Services;
 
-public class MovieInfoRepository(MovieAPIContext context)
+public class MovieInfoRepository(MovieAPIContext context) : IMovieService
 {
     public async Task<IEnumerable<Movie>> GetMoviesAsync(string? name = "", string? searchQuery = "")
     {
@@ -26,12 +27,12 @@ public class MovieInfoRepository(MovieAPIContext context)
         return await collection.OrderBy(m => m.Title).ToListAsync();
     }
 
-    internal async Task<Movie?> GetMovieAsync(int movieId)
+    public async Task<Movie?> GetMovieAsync(int movieId)
     {
         return await context.Movie.Where(m => m.Id == movieId).FirstOrDefaultAsync();
     }
 
-    internal async Task CreateMovie(Movie movie, MovieCreateDTO movieToCreate)
+    public async Task CreateMovie(Movie movie, MovieCreateDTO movieToCreate)
     {
         context.Add(movie);
 
@@ -48,27 +49,35 @@ public class MovieInfoRepository(MovieAPIContext context)
         }
     }
 
-    internal void DeleteMovie(Movie movieEntitiy)
+    public void DeleteMovie(Movie movieEntitiy)
     {
         context.Remove(movieEntitiy);
     }
 
-    internal async Task<bool> SaveChangesAsync()
+    public async Task SaveChangesAsync()
     {
-        return (await context.SaveChangesAsync() >= 0);
+        await context.SaveChangesAsync();
     }
 
-    internal async Task CreateActor(Actor actor, Movie? movie = null)
+    public Task CreateActor(Actor actor, Movie? movie = null)
     {
-        if (movie != null)
+        try
         {
-            actor.Movies?.Add(movie);
-            AddActorToMovie(movie, actor);
+            if (movie != null)
+            {
+                actor.Movies?.Add(movie);
+                AddActorToMovie(movie, actor);
+            }
+            context.Add(actor);
+            return Task.CompletedTask;
         }
-        context.Add(actor);
+        catch (Exception exception)
+        {
+            return Task.FromException(exception);
+        }
     }
 
-    internal void DeleteActor(Actor actorEntity)
+    public void DeleteActor(Actor actorEntity)
     {
         context.Remove(actorEntity);
     }
@@ -91,17 +100,18 @@ public class MovieInfoRepository(MovieAPIContext context)
 
         return await collection.OrderBy(a => a.Name).ToListAsync();
     }
-    internal async Task<Actor?> GetActorAsync(int actorId)
+
+    public async Task<Actor?> GetActorAsync(int actorId)
     {
         return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
     }
 
-    internal async Task<bool> MovieExists(int movieId)
+    public async Task<bool> MovieExists(int movieId)
     {
         return await context.Movie.AnyAsync((m => m.Id == movieId));
     }
 
-    internal async Task<bool> ActorExists(int actorId)
+    public async Task<bool> ActorExists(int actorId)
     {
         return await context.Actor.AnyAsync((a => a.Id == actorId));
     }
@@ -119,22 +129,22 @@ public class MovieInfoRepository(MovieAPIContext context)
         return true;
     }
 
-    internal async Task<IEnumerable<Review>> GetReviewsAsync()
+    public async Task<IEnumerable<Review>> GetReviewsAsync()
     {
         return await context.Review.OrderBy(r => r.ReviewerName).ToListAsync();
     }
 
-    internal async Task<Review?> GetReviewAsync(int reviewId)
+    public async Task<Review?> GetReviewAsync(int reviewId)
     {
         return await context.Review.Where(r => r.Id == reviewId).FirstOrDefaultAsync();
     }
 
-    internal async Task CreateReview(Review review)
+    public async Task CreateReview(Review review)
     {
         context.Add(review);
     }
 
-    internal void DeleteReview(Review reviewEntity)
+    public void DeleteReview(Review reviewEntity)
     {
         context.Remove(reviewEntity);
     }

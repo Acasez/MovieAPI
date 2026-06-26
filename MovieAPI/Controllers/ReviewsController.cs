@@ -10,12 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MovieAPI.Interfaces;
 
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReviewsController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
+public class ReviewsController(IMovieService repository, IMapper mapper) : ControllerBase
 {
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()

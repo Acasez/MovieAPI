@@ -5,6 +5,7 @@ using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Microsoft.AspNetCore.Mvc;
 using MovieAPI.DataTransferObjects;
+using MovieAPI.Interfaces;
 using MovieAPI.Services;
 using MovieAPI.Models;
 
@@ -12,7 +13,7 @@ namespace MovieAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SeedController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
+public class SeedController(IMovieService repository, IMapper mapper) : ControllerBase
 {
     private const string SpreadsheetId = "11s2lLlNAWnHhhpyIxO4nm5htyaNtvoQYOgvivIzggyw";
     private const string CredentialsFilePath = "C:/Users/Edvin/Documents/GoogleAPI/GoogleAPI.json";

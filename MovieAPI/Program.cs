@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieAPI.Data;
+using MovieAPI.Interfaces;
 using MovieAPI.Models;
 using MovieAPI.Services;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<MovieInfoRepository>();
+builder.Services.AddScoped<IMovieService, MovieInfoRepository>();
 
 builder.Services.AddAutoMapper(config => { }, AppDomain.CurrentDomain.GetAssemblies());
 

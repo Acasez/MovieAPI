@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MovieAPI.DataTransferObjects;
+using MovieAPI.Interfaces;
 using MovieAPI.Models;
-using MovieAPI.Services;
 
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MoviesController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
+public class MoviesController(IMovieService repository, IMapper mapper) : ControllerBase
 {
     // GET: api/Movies 
     //TODO add string? name, string? searchQuery

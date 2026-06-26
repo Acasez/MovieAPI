@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DataTransferObjects;
+using MovieAPI.Interfaces;
 using MovieAPI.Models;
 using MovieAPI.Services;
 
@@ -11,7 +12,7 @@ namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class GenresController(MovieInfoRepository repository, IMapper mapper) : ControllerBase
+public class GenresController(IMovieService repository, IMapper mapper) : ControllerBase
 {
     // GET: api/Genres
     [HttpGet]
