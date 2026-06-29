@@ -24,7 +24,9 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
             //TODO, re add search by genre
         }
 
-        return await collection.OrderBy(m => m.Title).ToListAsync();
+        return await collection.Include(m => m.MovieDetails) // Load MovieDetails
+            .Where(m => string.IsNullOrEmpty(name) || m.Title.Contains(name))
+            .ToListAsync();;
     }
 
     public async Task<Movie?> GetMovieAsync(int movieId)

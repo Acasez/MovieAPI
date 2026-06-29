@@ -59,13 +59,23 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     /// Get all categories using data from Google Sheet
     /// </summary> 
     [HttpPost("Seed All")]
-    public async Task SeedAll()
+    public async Task<IActionResult> SeedAll()
     {
         logger.LogInformation("Seeding all tables");
-        await SeedGenres();
-        await SeedSettings();
-        await SeedMovies();
-        await SeedActors();
+
+        await SeedGenres(); // Seed Genres first (no dependencies)
+        logger.LogInformation("Seeded Genres");
+        
+        await SeedSettings(); // Seed Settings next (no dependencies)
+        logger.LogInformation("Seeded Settings");
+        
+        await SeedMovies(); // Seed Movies (depends on Genres and Settings)
+        logger.LogInformation("Seeded Movies");
+
+        await SeedActors(); // Seed Actors (depends on Movies)
+        logger.LogInformation("Seeded Actors");
+
+        return Ok("All tables seeded successfully!");
     }
 
     ///<summary>
@@ -78,7 +88,22 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
         // Fetch all genres and settings once for performance
         IEnumerable<Genre> allGenres = await repository.GetGenresAsync();
         IEnumerable<Setting> allSettings = await repository.GetSettingsAsync();
+        
+        logger.LogInformation("Genres: {@Genres}", allGenres);
+        logger.LogInformation("Settings: {@Settings}", allSettings);
 
+        IEnumerable<Genre> enumerable = allGenres.ToList();
+        if (!enumerable.Any())
+        {
+            logger.LogWarning("No genres found in the database!");
+        }
+
+        IEnumerable<Setting> settings = allSettings.ToList();
+        if (!settings.Any())
+        {
+            logger.LogWarning("No settings found in the database!");
+        }
+        
         return await SeedEntities<Movie, MovieCreateDTO>(
             sheetName: "Movies",
             mapRowToDto: row =>
@@ -86,8 +111,10 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
                 string genreName = row[4].ToString() ?? string.Empty;
                 string settingName = row[5].ToString() ?? string.Empty;
 
-                Genre? genre = allGenres.FirstOrDefault(g => g.Name == genreName);
-                Setting? setting = allSettings.FirstOrDefault(s => s.Name == settingName);
+                Genre? genre = enumerable.FirstOrDefault(g => g.Name == genreName);
+                Setting? setting = settings.FirstOrDefault(s => s.Name == settingName);
+                
+                logger.LogInformation("Mapping Movie: {Title}, Genre: {GenreName}, GenreId: {GenreId}", row[1], genreName, genre?.Id);
 
                 return Task.FromResult(new MovieCreateDTO
                 {
@@ -204,17 +231,38 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     [HttpPost("Seed Genres")]
     public async Task<IActionResult> SeedGenres()
     {
-        return await SeedEntities<Genre, GenreCreateDTO>(
-            sheetName: "Genres",
-            mapRowToDto: row => Task.FromResult(new GenreCreateDTO
+        List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, "Genres", CredentialsFilePath);
+
+        // Skip header row if present
+        if (sheetData.Count > 0 && sheetData[0][0].ToString() == "Id")
+        {
+            sheetData.RemoveAt(0);
+        }
+
+        foreach (IList<object> row in sheetData)
+        {
+            string name = row[1].ToString() ?? string.Empty;
+            string description = row[2].ToString() ?? string.Empty;
+
+            // Check if the genre already exists
+            IEnumerable<Genre> existingGenres = await repository.GetGenresAsync();
+            Genre? existingGenre = existingGenres.FirstOrDefault();
+
+            if (existingGenre != null)
             {
-                Name = row[1].ToString() ?? string.Empty,
-                Description = row[2].ToString() ?? string.Empty,
-            }),
-            getExistingEntities: async dto => await repository.GetGenresAsync(),
-            mapDtoToEntity: mapper.Map<Genre>,
-            updateEntity: (entity, dto) => mapper.Map(dto, entity)
-        );;
+                // Update existing genre
+                existingGenre.Description = description;
+            }
+            else
+            {
+                // Insert new genre
+                Genre genre = new() { Name = name, Description = description };
+                await repository.CreateGenre(genre);
+            }
+        }
+
+        await repository.SaveChangesAsync();
+        return Ok("Genres seeded successfully!");
     }
     
     ///<summary>
