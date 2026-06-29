@@ -54,6 +54,22 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
         return Ok($"{sheetName} seeded successfully!");
     }
     
+    ///<summary>
+    /// Get all categories using data from Google Sheet
+    /// </summary> 
+    [HttpPost("Seed All")]
+    public async Task SeedAll()
+    {
+        await SeedGenres();
+        await SeedSettings();
+        await SeedMovies();
+        await SeedActors();
+    }
+
+    ///<summary>
+    /// Get all movies using data from Google Sheet
+    /// Update data for existing movies and create new objects for the rest
+    /// </summary> 
     [HttpPost("Seed Movies")]
     public async Task<IActionResult> SeedMovies()
     {
@@ -109,7 +125,10 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
             }
         );
     }
-    
+    ///<summary>
+    /// Get all actors using data from Google Sheet
+    /// Set actor in movies references and create MovieActor objects
+    /// </summary> 
     [HttpPost("Seed Actors")]
     public async Task<IActionResult> SeedActors()
     {
@@ -176,6 +195,9 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
         return Ok("Actors and their movies seeded successfully!");
     }
     
+    ///<summary>
+    /// Get all genres using data from Google Sheet
+    /// </summary> 
     [HttpPost("Seed Genres")]
     public async Task<IActionResult> SeedGenres()
     {
@@ -192,6 +214,9 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
         );
     }
     
+    ///<summary>
+    /// Get all settings using data from Google Sheet
+    /// </summary> 
     [HttpPost("Seed Settings")]
     public async Task<IActionResult> SeedSettings()
     {
@@ -207,7 +232,7 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
             updateEntity: (entity, dto) => mapper.Map(dto, entity)
         );
     }
-
+    
     private static async Task<List<IList<object>>> GetSheetDataAsync(string spreadsheetId, string sheetName, string credentialsFilePath)
     {
         GoogleCredential? credential = GoogleCredential.FromFile(credentialsFilePath)
