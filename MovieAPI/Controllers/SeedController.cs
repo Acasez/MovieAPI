@@ -13,7 +13,7 @@ namespace MovieAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SeedController(IMovieService repository, IMapper mapper, ILogger logger) : ControllerBase
+public class SeedController(IMovieService repository, IMapper mapper, ILogger<SeedController> logger) : ControllerBase
 {
     private const string SpreadsheetId = "11s2lLlNAWnHhhpyIxO4nm5htyaNtvoQYOgvivIzggyw";
     private const string CredentialsFilePath = "C:/Users/Edvin/Documents/GoogleAPI/GoogleAPI.json";
@@ -51,7 +51,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger lo
         }
 
         await repository.SaveChangesAsync();
-        logger.LogInformation("Seeded " + sheetName);
+        logger.LogInformation("Seeded {SheetName}", sheetName);
         return Ok($"{sheetName} seeded successfully!");
     }
     
@@ -127,6 +127,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger lo
             }
         );
     }
+    
     ///<summary>
     /// Get all actors using data from Google Sheet
     /// Set actor in movies references and create MovieActor objects
