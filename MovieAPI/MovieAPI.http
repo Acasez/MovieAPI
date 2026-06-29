@@ -6,19 +6,19 @@
 @settingId = 1
 
 ### Seed movies from google sheet
-POST {{baseUrl}}/api/seed/Seed Movies
+POST {{baseUrl}}/api/seed/SeedMovies
 
 ### Seed actors from google sheet
-POST {{baseUrl}}/api/seed/Seed Actors
+POST {{baseUrl}}/api/seed/SeedActors
 
 ### Seed genres from google sheet
-POST {{baseUrl}}/api/seed/Seed Genres
+POST {{baseUrl}}/api/seed/SeedGenres
 
 ### Seed settings from google sheet
-POST {{baseUrl}}/api/seed/Seed Settings
+POST {{baseUrl}}/api/seed/SeedSettings
 
 ### Seed everything from google sheet
-POST {{baseUrl}}/api/seed/Seed All
+POST {{baseUrl}}/api/seed/SeedAll
 
 ### Get all movies
 GET {{baseUrl}}/api/movies

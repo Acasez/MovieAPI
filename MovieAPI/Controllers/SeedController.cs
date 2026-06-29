@@ -58,7 +58,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     ///<summary>
     /// Get all categories using data from Google Sheet
     /// </summary> 
-    [HttpPost("Seed All")]
+    [HttpPost("SeedAll")]
     public async Task<IActionResult> SeedAll()
     {
         logger.LogInformation("Seeding all tables");
@@ -82,7 +82,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     /// Get all movies using data from Google Sheet
     /// Update data for existing movies and create new objects for the rest
     /// </summary> 
-    [HttpPost("Seed Movies")]
+    [HttpPost("SeedMovies")]
     public async Task<IActionResult> SeedMovies()
     {
         // Fetch all genres and settings once for performance
@@ -92,27 +92,27 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
         logger.LogInformation("Genres: {@Genres}", allGenres);
         logger.LogInformation("Settings: {@Settings}", allSettings);
 
-        IEnumerable<Genre> enumerable = allGenres.ToList();
-        if (!enumerable.Any())
+        IEnumerable<Genre> genres = [.. allGenres];
+        if (!genres.Any())
         {
             logger.LogWarning("No genres found in the database!");
         }
 
-        IEnumerable<Setting> settings = allSettings.ToList();
+        IEnumerable<Setting> settings = [.. allSettings];
         if (!settings.Any())
         {
             logger.LogWarning("No settings found in the database!");
         }
         
-        return await SeedEntities<Movie, MovieCreateDTO>(
+        return await SeedEntities(
             sheetName: "Movies",
             mapRowToDto: row =>
             {
                 string genreName = row[4].ToString() ?? string.Empty;
                 string settingName = row[5].ToString() ?? string.Empty;
 
-                Genre? genre = enumerable.FirstOrDefault(g => g.Name == genreName);
-                Setting? setting = settings.FirstOrDefault(s => s.Name == settingName);
+                Genre? genre = allGenres.FirstOrDefault(g => g.Name == genreName);
+                Setting? setting = allSettings.FirstOrDefault(s => s.Name == settingName);
                 
                 logger.LogInformation("Mapping Movie: {Title}, Genre: {GenreName}, GenreId: {GenreId}", row[1], genreName, genre?.Id);
 
@@ -159,7 +159,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     /// Get all actors using data from Google Sheet
     /// Set actor in movies references and create MovieActor objects
     /// </summary> 
-    [HttpPost("Seed Actors")]
+    [HttpPost("SeedActors")]
     public async Task<IActionResult> SeedActors()
     {
         List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, "Actors", CredentialsFilePath);
@@ -213,7 +213,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
 
                 if (movie == null) continue;
                 // Add the actor to the movie's Actors collection
-                movie.Actors ??= new List<Actor>();
+                movie.Actors ??= [];
                 if (!movie.Actors.Contains(actor))
                 {
                     movie.Actors.Add(actor);
@@ -228,7 +228,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     ///<summary>
     /// Get all genres using data from Google Sheet
     /// </summary> 
-    [HttpPost("Seed Genres")]
+    [HttpPost("SeedGenres")]
     public async Task<IActionResult> SeedGenres()
     {
         List<IList<object>> sheetData = await GetSheetDataAsync(SpreadsheetId, "Genres", CredentialsFilePath);
@@ -268,10 +268,10 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
     ///<summary>
     /// Get all settings using data from Google Sheet
     /// </summary> 
-    [HttpPost("Seed Settings")]
+    [HttpPost("SeedSettings")]
     public async Task<IActionResult> SeedSettings()
     {
-        return await SeedEntities<Setting, SettingCreateDTO>(
+        return await SeedEntities(
             sheetName: "Settings",
             mapRowToDto: row => Task.FromResult(new SettingCreateDTO()
             {
