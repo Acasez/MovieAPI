@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MovieAPI.Data;
 using MovieAPI.Interfaces;
-using MovieAPI.Models;
 using MovieAPI.Services;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 
@@ -35,8 +32,14 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
+    app.MapOpenApi();
+    
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "v1");
+    });
 }
+
 
 app.UseHttpsRedirection();
 
