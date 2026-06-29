@@ -13,7 +13,7 @@ namespace MovieAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SeedController(IMovieService repository, IMapper mapper) : ControllerBase
+public class SeedController(IMovieService repository, IMapper mapper, ILogger logger) : ControllerBase
 {
     private const string SpreadsheetId = "11s2lLlNAWnHhhpyIxO4nm5htyaNtvoQYOgvivIzggyw";
     private const string CredentialsFilePath = "C:/Users/Edvin/Documents/GoogleAPI/GoogleAPI.json";
@@ -51,6 +51,7 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
         }
 
         await repository.SaveChangesAsync();
+        logger.LogInformation("Seeded " + sheetName);
         return Ok($"{sheetName} seeded successfully!");
     }
     
@@ -60,6 +61,7 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
     [HttpPost("Seed All")]
     public async Task SeedAll()
     {
+        logger.LogInformation("Seeding all tables");
         await SeedGenres();
         await SeedSettings();
         await SeedMovies();
@@ -211,7 +213,7 @@ public class SeedController(IMovieService repository, IMapper mapper) : Controll
             getExistingEntities: async dto => await repository.GetGenresAsync(),
             mapDtoToEntity: mapper.Map<Genre>,
             updateEntity: (entity, dto) => mapper.Map(dto, entity)
-        );
+        );;
     }
     
     ///<summary>
