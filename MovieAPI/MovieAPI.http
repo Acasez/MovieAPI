@@ -17,6 +17,9 @@ POST {{baseUrl}}/api/seed/Seed Genres
 ### Seed settings from google sheet
 POST {{baseUrl}}/api/seed/Seed Settings
 
+### Seed everything from google sheet
+POST {{baseUrl}}/api/seed/Seed All
+
 ### Get all movies
 GET {{baseUrl}}/api/movies
 
