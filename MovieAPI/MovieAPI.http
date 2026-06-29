@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5259
-@movieId = 61
+@movieId = 126
 @actorId = 1010
 @reviewId = 1
 @genreId = 6
@@ -177,7 +177,7 @@ DELETE {{baseUrl}}/api/genres/all
 ### Delete movieDetails
 DELETE {{baseUrl}}/api/movies/details/2
 
-### Delete settings
+### Delete setting
 DELETE {{baseUrl}}/api/Settings/{{settingId}}
 
 ### Delete all settings
