@@ -166,9 +166,10 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
         return await context.Genre.Where(g => g.Name == genreName).FirstOrDefaultAsync();
     }
 
-    public async Task CreateGenre(Genre genre)
+    public Task CreateGenre(Genre genre)
     {
         context.Add(genre);
+        return Task.CompletedTask;
     }
 
     public void DeleteGenre(Genre genreEntity)
@@ -234,5 +235,15 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
     public void CreateEntity<TEntity>(TEntity entity)
     {
         if (entity != null) context.Add(entity);
+    }
+
+    public async Task ResetAllTables()
+    {
+        await context.MovieDetails.ExecuteDeleteAsync();
+        await context.Actor.ExecuteDeleteAsync();
+        await context.Movie.ExecuteDeleteAsync();
+        await context.Genre.ExecuteDeleteAsync();
+        await context.Settings.ExecuteDeleteAsync();
+        await context.SaveChangesAsync();
     }
 }

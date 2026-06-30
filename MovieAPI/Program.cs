@@ -4,7 +4,6 @@ using MovieAPI.Interfaces;
 using MovieAPI.Services;
 using Newtonsoft.Json.Serialization;
 
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MovieAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieAPIContext") ?? throw new InvalidOperationException("Connection string 'MovieAPIContext' not found.")));
@@ -39,7 +38,6 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
 }
-
 
 app.UseHttpsRedirection();
 

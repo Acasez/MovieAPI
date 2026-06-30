@@ -37,4 +37,5 @@ public interface IMovieService
     void DeleteMovieDetails(MovieDetails movieDetails);
     Task<bool> MovieExistsAsync(int movieId);
     void CreateEntity<TEntity>(TEntity entity);
+    Task ResetAllTables();
 }

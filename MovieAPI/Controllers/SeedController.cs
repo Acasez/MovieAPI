@@ -78,6 +78,13 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
         return Ok("All tables seeded successfully!");
     }
 
+    [HttpDelete("All")]
+    public async Task ResetTables()
+    {
+        await repository.ResetAllTables();
+        await repository.SaveChangesAsync();
+    }
+
     ///<summary>
     /// Get all movies using data from Google Sheet
     /// Update data for existing movies and create new objects for the rest
