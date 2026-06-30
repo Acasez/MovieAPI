@@ -34,6 +34,11 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
         return await context.Movie.Where(m => m.Id == movieId).FirstOrDefaultAsync();
     }
 
+    public async Task<Movie?> GetMovieAsync(string movieTitle)
+    {
+        return await context.Movie.Where(m => m.Title == movieTitle).FirstOrDefaultAsync();
+    }
+
     public async Task CreateMovie(Movie movie, MovieCreateDTO movieToCreate)
     {
         context.Add(movie);

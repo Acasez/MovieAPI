@@ -34,10 +34,23 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
 
         return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
+    
+    [HttpGet("{movieTitle}")]
+    public async Task<ActionResult<MovieDTO>> GetMovie(string movieTitle)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieTitle);
+
+        if (movieEntity == null)
+        {
+            return NotFound("Movie not found");
+        }
+
+        return Ok(mapper.Map<MovieDTO>(movieEntity));
+    }
 
     // PUT: api/Movies/movieId
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{movieId}")]
+    [HttpPut("{movieId:int}")]
     public async Task<IActionResult> UpdateMovie(int movieId, MovieUpdateDTO movie)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
@@ -58,6 +71,11 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
     [HttpPost]
     public async Task<ActionResult<MovieDTO>> CreateMovie(MovieCreateDTO movieToCreate)
     {
+        if (await repository.GetMovieAsync(movieToCreate.Title) != null)
+        {
+            return BadRequest("Movie with Title already exists");
+        }
+                
         Movie? movie = mapper.Map<Movie>(movieToCreate);
 
         await repository.CreateMovie(movie, movieToCreate);

@@ -7,6 +7,7 @@ public interface IMovieService
 {
     Task<IEnumerable<Movie>> GetMoviesAsync(string? name = "", string? searchQuery = "");
     Task<Movie?> GetMovieAsync(int movieId);
+    Task<Movie?> GetMovieAsync(string movieTitle);
     Task CreateMovie(Movie movie, MovieCreateDTO movieToCreate);
     void DeleteMovie(Movie movieEntitiy);
     Task SaveChangesAsync();
