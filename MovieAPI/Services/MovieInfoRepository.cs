@@ -110,7 +110,8 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
 
     public async Task<Actor?> GetActorAsync(int actorId)
     {
-        return await context.Actor.Where(a => a.Id == actorId).FirstOrDefaultAsync();
+        return await context.Actor.Where(a => a.Id == actorId).
+            Include(a => a.Movies).FirstOrDefaultAsync();
     }
 
     public async Task<bool> MovieExists(int movieId)

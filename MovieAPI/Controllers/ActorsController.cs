@@ -23,7 +23,6 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
     }
 
-    // GET: api/Actors/5
     [HttpGet("{actorId:int}")]
     public async Task<ActionResult<ActorDTO>> GetActor(int actorId)
     {
@@ -36,9 +35,27 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
 
         return Ok(mapper.Map<ActorDTO>(actorEntity));
     }
+    
+    // GET: api/Actors/5
+    [HttpGet("{actorId:int}/movies")]
+    public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesFromActor(int actorId)
+    {
+        Actor? actorEntity = await repository.GetActorAsync(actorId);
 
-    // PUT: api/Movies/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        if (actorEntity == null)
+        {
+            return NotFound("Actor not found");
+        }
+        
+        IEnumerable<Movie>? movies = actorEntity.Movies;
+        if (movies == null || !movies.Any())
+        {
+            return NotFound("Actor has no movies listed");
+        }
+
+        return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
+    }
+
     [HttpPut("{actorId:int}")]
     public async Task<IActionResult> UpdateActor(int actorId, ActorUpdateDTO actor)
     {
