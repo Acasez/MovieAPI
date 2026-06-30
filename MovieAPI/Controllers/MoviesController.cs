@@ -11,8 +11,6 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class MoviesController(IMovieService repository, IMapper mapper) : ControllerBase
 {
-    // GET: api/Movies 
-    //TODO add string? name, string? searchQuery
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(string? name = "", string? searchQuery = "")
     {
@@ -21,7 +19,6 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }
 
-    // GET: api/Movies/movieId
     [HttpGet("{movieId:int}")]
     public async Task<ActionResult<MovieDTO>> GetMovie(int movieId)
     {
@@ -33,6 +30,25 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         }
 
         return Ok(mapper.Map<MovieDTO>(movieEntity));
+    }
+    
+    [HttpGet("{movieId:int}/actors")]
+    public async Task<ActionResult<IEnumerable<ActorDTO>>>GetMovieActors(int movieId)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieId);
+
+        if (movieEntity == null)
+        {
+            return NotFound("Movie not found");
+        }
+        
+        IEnumerable<Actor>? actors = movieEntity.Actors;
+        if (actors == null || !actors.Any())
+        {
+            return NotFound("Movies has no actors listed");
+        }
+
+        return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
     }
     
     [HttpGet("{movieTitle}")]
@@ -48,8 +64,6 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
 
-    // PUT: api/Movies/movieId
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{movieId:int}")]
     public async Task<IActionResult> UpdateMovie(int movieId, MovieUpdateDTO movie)
     {
@@ -66,8 +80,6 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    // POST: api/Movies
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<MovieDTO>> CreateMovie(MovieCreateDTO movieToCreate)
     {
@@ -85,7 +97,6 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return CreatedAtAction("GetMovie", new { movieId = createdMovie.Id }, createdMovie);
     }
 
-    // POST: api/Movies/movieId
     [HttpPost("{movieId:int}/actor")]  // Create actor in movie
     public async Task<ActionResult<ActorDTO>> CreateActorInMovie(ActorCreateDTO actorToCreate, int movieId)
     {
@@ -104,6 +115,7 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return CreatedAtAction(actionName: "GetActor", controllerName: "Actors",
             routeValues: new { actorId = createdActorDto.Id },value: createdActorDto);
     }
+    
     [HttpPost("{movieId:int}/details")]  // Create movieDetails
     public async Task<ActionResult<ActorDTO>> CreateMovieDetails(MovieDetailsCreateDTO movieDetailsToCreate, int movieId)
     {
@@ -150,7 +162,6 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    // DELETE: api/Movies/movieId
     [HttpDelete("{movieId:int}")]
     public async Task<IActionResult> DeleteMovie(int movieId)
     {

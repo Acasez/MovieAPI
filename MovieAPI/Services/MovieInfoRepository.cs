@@ -31,7 +31,9 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
 
     public async Task<Movie?> GetMovieAsync(int movieId)
     {
-        return await context.Movie.Where(m => m.Id == movieId).FirstOrDefaultAsync();
+        return await context.Movie.Where(m => m.Id == movieId).
+            Include(m => m.MovieDetails).Include(m => m.Actors).
+            FirstOrDefaultAsync();
     }
 
     public async Task<Movie?> GetMovieAsync(string movieTitle)
