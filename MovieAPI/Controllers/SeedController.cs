@@ -3,16 +3,17 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieAPI.DataTransferObjects;
 using MovieAPI.Interfaces;
-using MovieAPI.Services;
 using MovieAPI.Models;
 
 namespace MovieAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize] 
 public class SeedController(IMovieService repository, IMapper mapper, ILogger<SeedController> logger) : ControllerBase
 {
     private const string SpreadsheetId = "11s2lLlNAWnHhhpyIxO4nm5htyaNtvoQYOgvivIzggyw";
