@@ -187,8 +187,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
             };
 
             // Check if the actor already exists
-            IEnumerable<Actor> existingActors = await repository.GetActorsAsync(name: actorToCreate.Name, searchQuery: null);
-            Actor? existingActor = existingActors.FirstOrDefault();
+            Actor? existingActor = await repository.GetActorAsync(actorToCreate.Name);
 
             // Create or update the actor
             Actor actor;
@@ -215,8 +214,7 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
             // For each movie title, find the movie and link the actor
             foreach (string movieTitle in movieTitles)
             {
-                IEnumerable<Movie> movies = await repository.GetMoviesAsync(name: movieTitle, searchQuery: null);
-                Movie? movie = movies.FirstOrDefault();
+                Movie? movie = await repository.GetMovieAsync(movieTitle);
 
                 if (movie == null) continue;
                 // Add the actor to the movie's Actors collection

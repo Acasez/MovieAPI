@@ -36,7 +36,19 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<ActorDTO>(actorEntity));
     }
     
-    // GET: api/Actors/5
+    [HttpGet("{actorName}")]
+    public async Task<ActionResult<MovieDTO>> GetActor(string actorName)
+    {
+         Actor? actorEntity = await repository.GetActorAsync(actorName);
+
+         if (actorEntity == null)
+         {
+             return NotFound("Actor not found");
+         }
+
+         return Ok(mapper.Map<ActorDTO>(actorEntity));
+    }
+    
     [HttpGet("{actorId:int}/movies")]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesFromActor(int actorId)
     {

@@ -32,6 +32,19 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
     
+    [HttpGet("{movieTitle}")]
+    public async Task<ActionResult<MovieDTO>> GetMovie(string movieTitle)
+    {
+        Movie? movieEntity = await repository.GetMovieAsync(movieTitle);
+
+        if (movieEntity == null)
+        {
+            return NotFound("Movie not found");
+        }
+
+        return Ok(mapper.Map<MovieDTO>(movieEntity));
+    }
+    
     [HttpGet("{movieId:int}/actors")]
     public async Task<ActionResult<IEnumerable<ActorDTO>>>GetMovieActors(int movieId)
     {
@@ -45,23 +58,10 @@ public class MoviesController(IMovieService repository, IMapper mapper) : Contro
         IEnumerable<Actor>? actors = movieEntity.Actors;
         if (actors == null || !actors.Any())
         {
-            return NotFound("Movies has no actors listed");
+            return NotFound("Movie has no actors listed");
         }
 
         return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
-    }
-    
-    [HttpGet("{movieTitle}")]
-    public async Task<ActionResult<MovieDTO>> GetMovie(string movieTitle)
-    {
-        Movie? movieEntity = await repository.GetMovieAsync(movieTitle);
-
-        if (movieEntity == null)
-        {
-            return NotFound("Movie not found");
-        }
-
-        return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
 
     [HttpPut("{movieId:int}")]

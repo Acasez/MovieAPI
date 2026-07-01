@@ -62,6 +62,11 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
     {
         context.Remove(movieEntitiy);
     }
+    
+    public async Task<bool> MovieExists(int movieId)
+    {
+        return await context.Movie.AnyAsync((m => m.Id == movieId));
+    }
 
     public async Task SaveChangesAsync()
     {
@@ -115,10 +120,11 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
         return await context.Actor.Where(a => a.Id == actorId).
             Include(a => a.Movies).FirstOrDefaultAsync();
     }
-
-    public async Task<bool> MovieExists(int movieId)
+    
+    public async Task<Actor?> GetActorAsync(string actorName)
     {
-        return await context.Movie.AnyAsync((m => m.Id == movieId));
+        return await context.Actor.Where(a => a.Name == actorName).
+            Include(a => a.Movies).FirstOrDefaultAsync();
     }
 
     public async Task<bool> ActorExists(int actorId)

@@ -39,4 +39,5 @@ public interface IMovieService
     Task<bool> MovieExistsAsync(int movieId);
     void CreateEntity<TEntity>(TEntity entity);
     Task ResetAllTables();
+    Task<Actor?> GetActorAsync(string actorName);
 }
