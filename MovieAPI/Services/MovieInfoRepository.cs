@@ -253,11 +253,20 @@ public class MovieInfoRepository(MovieAPIContext context) : IMovieService
 
     public async Task ResetAllTables()
     {
+        // Delete all rows
         await context.MovieDetails.ExecuteDeleteAsync();
         await context.Actor.ExecuteDeleteAsync();
         await context.Movie.ExecuteDeleteAsync();
         await context.Genre.ExecuteDeleteAsync();
         await context.Settings.ExecuteDeleteAsync();
+
+        // Reset identity counters for SQL Server
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('MovieDetails', RESEED, 0)");
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('Actor', RESEED, 0)");
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('Movie', RESEED, 0)");
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('Genre', RESEED, 0)");
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('Settings', RESEED, 0)");
+
         await context.SaveChangesAsync();
     }
 }
