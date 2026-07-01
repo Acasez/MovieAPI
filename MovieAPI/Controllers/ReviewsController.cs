@@ -26,7 +26,6 @@ public class ReviewsController(IMovieService repository, IMapper mapper) : Contr
         return Ok(mapper.Map<IEnumerable<ReviewDTO>>(reviews));
     }
 
-    // GET: api/Reviews/5
     [HttpGet("{reviewId:int}")]
     public async Task<ActionResult<ReviewDTO>> GetReview(int reviewId)
     {
@@ -40,8 +39,6 @@ public class ReviewsController(IMovieService repository, IMapper mapper) : Contr
         return Ok(mapper.Map<ReviewDTO>(reviewEntity));
     }
 
-    // PUT: api/Reviews/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{reviewId:int}")]
     public async Task<IActionResult> UpdateReview(int reviewId, ReviewUpdateDTO review)
     {
@@ -58,8 +55,6 @@ public class ReviewsController(IMovieService repository, IMapper mapper) : Contr
         return NoContent();
     }
 
-    // POST: api/Reviews
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<ReviewDTO>> CreateReview(ReviewCreateDTO reviewToCreate)
     {
@@ -72,7 +67,6 @@ public class ReviewsController(IMovieService repository, IMapper mapper) : Contr
         return CreatedAtAction("GetReview", new { reviewId = createdReview.Id }, createdReview);
     }
 
-    // DELETE: api/Reviews/5
     [HttpDelete("{reviewId:int}")]
     public async Task<IActionResult> DeleteReview(int reviewId)
     {

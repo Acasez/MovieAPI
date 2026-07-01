@@ -14,7 +14,6 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class GenresController(IMovieService repository, IMapper mapper) : ControllerBase
 {
-    // GET: api/Genres
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
     {
@@ -23,7 +22,6 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<IEnumerable<GenreDTO>>(genres));
     }
 
-    // GET: api/Genres/5
     [HttpGet("{genreId:int}")]
     public async Task<ActionResult<GenreDTO>> GetGenre(int genreId)
     {
@@ -50,8 +48,6 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<GenreDTO>(genreEntity));
     }
 
-    // PUT: api/Movies/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{genreId:int}")]
     public async Task<IActionResult> UpdateGenre(int genreId, GenreUpdateDTO genre)
     {
@@ -68,7 +64,6 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    // POST: api/Genres
     [HttpPost]
     public async Task<ActionResult<GenreDTO>> CreateGenre(GenreCreateDTO genreToCreate)
     {
@@ -109,7 +104,6 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    // DELETE: api/Genres/5
     [HttpDelete("{genreId:int}")]
     public async Task<IActionResult> DeleteGenre(int genreId)
     {
@@ -140,7 +134,7 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    [HttpPost("{movieId:int}/genres")]
+    [HttpPost("{movieId:int}/genres")] //Not done 
     public async Task<IActionResult> AddGenresToMovie(int movieId, List<int> genreIds)
     {
         Movie? movieEntity = await repository.GetMovieAsync(movieId);
