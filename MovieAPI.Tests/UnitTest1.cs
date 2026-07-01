@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using MovieAPI.DataTransferObjects;
 using MovieAPI.Services;
@@ -68,9 +69,12 @@ namespace MovieAPI.Tests
             mockMapper
                 .Setup(m => m.Map<IEnumerable<MovieDTO>>(It.IsAny<IEnumerable<Movie>>()))
                 .Returns(expectedMovies.ToArray()); // Return as array to match the controller
-
+            
+            // Mock the logger
+            Mock<ILogger<MoviesController>> mockLogger = new();
+            
             // Create the controller
-            MoviesController controller = new(mockService.Object, mockMapper.Object);
+            MoviesController controller = new(mockService.Object, mockMapper.Object, mockLogger.Object);
 
             // Act
             ActionResult<IEnumerable<MovieDTO>> result = await controller.GetMovies();
@@ -122,8 +126,11 @@ namespace MovieAPI.Tests
                 .Setup(m => m.Map<MovieDTO>(It.IsAny<Movie>()))
                 .Returns(movieDto); // Return as array to match the controller
 
-        
-            MoviesController controller = new(mockService.Object, mockMapper.Object);
+            // Mock the logger
+            Mock<ILogger<MoviesController>> mockLogger = new();
+            
+            // Create the controller
+            MoviesController controller = new(mockService.Object, mockMapper.Object, mockLogger.Object);
         
             // Act
             ActionResult<MovieDTO> result = await controller.GetMovie(0);

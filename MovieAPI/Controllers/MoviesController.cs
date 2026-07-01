@@ -9,13 +9,14 @@ namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MoviesController(IMovieService repository, IMapper mapper) : ControllerBase
+public class MoviesController(IMovieService repository, IMapper mapper, ILogger<MoviesController> logger) : ControllerBase
 {
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(string? name = "", string? searchQuery = "")
     {
         IEnumerable<Movie> movies = await repository.GetMoviesAsync(name, searchQuery);
-
+        
+        logger.LogInformation("Fetching movies");
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }
 
