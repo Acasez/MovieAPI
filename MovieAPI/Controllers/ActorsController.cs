@@ -14,7 +14,9 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class ActorsController(IMovieService repository, IMapper mapper) : ControllerBase
 {
-    // GET: api/Actors
+    ///<summary>
+    /// Get all actors
+    /// </summary> 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ActorDTO>>> GetActors(string? name, string? searchQuery)
     {
@@ -22,7 +24,10 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
 
         return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
     }
-
+    
+    ///<summary>
+    /// Get a actor
+    /// </summary> 
     [HttpGet("{actorId:int}")]
     public async Task<ActionResult<ActorDTO>> GetActor(int actorId)
     {
@@ -36,6 +41,9 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<ActorDTO>(actorEntity));
     }
     
+    ///<summary>
+    /// Get a actor by name
+    /// </summary> 
     [HttpGet("{actorName}")]
     public async Task<ActionResult<MovieDTO>> GetActor(string actorName)
     {
@@ -49,6 +57,9 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
          return Ok(mapper.Map<ActorDTO>(actorEntity));
     }
     
+    ///<summary>
+    /// Get all movies an actor has been in
+    /// </summary> 
     [HttpGet("{actorId:int}/movies")]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesFromActor(int actorId)
     {
@@ -67,7 +78,10 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
 
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }
-
+    
+    ///<summary>
+    /// Update an actor
+    /// </summary> 
     [HttpPut("{actorId:int}")]
     public async Task<IActionResult> UpdateActor(int actorId, ActorUpdateDTO actor)
     {
@@ -84,7 +98,9 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    // POST: api/Actors
+    ///<summary>
+    /// Add an actor
+    /// </summary> 
     [HttpPost]
     public async Task<ActionResult<ActorDTO>> CreateActor(ActorCreateDTO actorToCreate)
     {
@@ -96,7 +112,10 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         ActorDTO createdActorDto = mapper.Map<ActorDTO>(actor);
         return CreatedAtAction("GetActor", new { actorId = createdActorDto.Id }, createdActorDto);
     }
-
+    
+    ///<summary>
+    /// Partially update an actor
+    /// </summary> 
     [HttpPatch("{actorId:int}")]
     public async Task<ActionResult> PartiallyUpdateActor(int actorId, [FromBody] JsonPatchDocument<ActorUpdateDTO> patchDocument)
     {
@@ -125,7 +144,9 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
 
-    // DELETE: api/Actors/5
+    ///<summary>
+    /// Delete an actor
+    /// </summary> 
     [HttpDelete("{actorId:int}")]
     public async Task<IActionResult> DeleteActor(int actorId)
     {
@@ -142,6 +163,9 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
     
+    ///<summary>
+    /// Delete all actors
+    /// </summary> 
     [HttpDelete("All")]
     public async Task<IActionResult> DeleteAllActors()
     {
@@ -155,7 +179,10 @@ public class ActorsController(IMovieService repository, IMapper mapper) : Contro
 
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Add a number of actors to a movie
+    /// </summary> 
     [HttpPost("{movieId:int}/actors")]
     public async Task<IActionResult> AddActorsToMovie(int movieId, List<int> actorIds)
     {

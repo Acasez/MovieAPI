@@ -78,7 +78,10 @@ public class SeedController(IMovieService repository, IMapper mapper, ILogger<Se
 
         return Ok("All tables seeded successfully!");
     }
-
+    
+    ///<summary>
+    /// Delete all data in all tables and reset the autoincrement
+    /// </summary> 
     [HttpDelete("All")]
     public async Task ResetTables()
     {

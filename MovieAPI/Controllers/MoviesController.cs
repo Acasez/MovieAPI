@@ -11,6 +11,9 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class MoviesController(IMovieService repository, IMapper mapper, ILogger<MoviesController> logger) : ControllerBase
 {
+    ///<summary>
+    /// Get all movies
+    /// </summary> 
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies(string? name = "", string? searchQuery = "")
     {
@@ -19,7 +22,10 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
         logger.LogInformation("Fetching movies");
         return Ok(mapper.Map<IEnumerable<MovieDTO>>(movies));
     }
-
+    
+    ///<summary>
+    /// Get a movie by id
+    /// </summary> 
     [HttpGet("{movieId:int}")]
     public async Task<ActionResult<MovieDTO>> GetMovie(int movieId)
     {
@@ -33,6 +39,9 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
         return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
     
+    ///<summary>
+    /// Get a movie by title
+    /// </summary> 
     [HttpGet("{movieTitle}")]
     public async Task<ActionResult<MovieDTO>> GetMovie(string movieTitle)
     {
@@ -46,6 +55,9 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
         return Ok(mapper.Map<MovieDTO>(movieEntity));
     }
     
+    ///<summary>
+    /// Get all actors in a movie from movie id
+    /// </summary> 
     [HttpGet("{movieId:int}/actors")]
     public async Task<ActionResult<IEnumerable<ActorDTO>>>GetMovieActors(int movieId)
     {
@@ -64,7 +76,10 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
 
         return Ok(mapper.Map<IEnumerable<ActorDTO>>(actors));
     }
-
+    
+    ///<summary>
+    /// Update a movie by id
+    /// </summary> 
     [HttpPut("{movieId:int}")]
     public async Task<IActionResult> UpdateMovie(int movieId, MovieUpdateDTO movie)
     {
@@ -80,7 +95,10 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
 
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Create a movie
+    /// </summary> 
     [HttpPost]
     public async Task<ActionResult<MovieDTO>> CreateMovie(MovieCreateDTO movieToCreate)
     {
@@ -97,7 +115,10 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
         MovieDTO createdMovie = mapper.Map<MovieDTO>(movie);
         return CreatedAtAction("GetMovie", new { movieId = createdMovie.Id }, createdMovie);
     }
-
+    
+    ///<summary>
+    /// Create an actor and add them to the movie
+    /// </summary> 
     [HttpPost("{movieId:int}/actor")]  // Create actor in movie
     public async Task<ActionResult<ActorDTO>> CreateActorInMovie(ActorCreateDTO actorToCreate, int movieId)
     {
@@ -117,6 +138,9 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
             routeValues: new { actorId = createdActorDto.Id },value: createdActorDto);
     }
     
+    ///<summary>
+    /// Create moviedetails for a movie
+    /// </summary> 
     [HttpPost("{movieId:int}/details")]  // Create movieDetails
     public async Task<ActionResult<ActorDTO>> CreateMovieDetails(MovieDetailsCreateDTO movieDetailsToCreate, int movieId)
     {
@@ -136,6 +160,9 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
             routeValues: new { movieId = movieEntity.Id },value: createdDetailsDto);
     }
 
+    ///<summary>
+    /// Partially upaate a movie
+    /// </summary> 
     [HttpPatch("{movieId:int}")]
     public async Task<ActionResult> PartiallyUpdateMovie(int movieId, [FromBody]JsonPatchDocument<MovieUpdateDTO> patchDocument)
     {
@@ -162,7 +189,10 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
         await repository.SaveChangesAsync();
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Delete a movie
+    /// </summary> 
     [HttpDelete("{movieId:int}")]
     public async Task<IActionResult> DeleteMovie(int movieId)
     {
@@ -177,7 +207,10 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
 
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Get moviedetails for a movie
+    /// </summary> 
     [HttpGet("{movieId:int}/details")]
     public async Task<ActionResult<MovieDTO>> GetMovieDetails(int movieId)
     {
@@ -197,7 +230,9 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
             Details = mapper.Map<MovieDetailsDTO>(movieDetails)
         });
     }
-    
+    ///<summary>
+    /// Delete a movies details
+    /// </summary> 
     [HttpDelete("details/{movieDetailsId:int}")]
     public async Task<IActionResult> DeleteMovieDetails(int movieDetailsId)
     {
@@ -214,6 +249,9 @@ public class MoviesController(IMovieService repository, IMapper mapper, ILogger<
         return NoContent();
     }
     
+    ///<summary>
+    /// Delete all movies
+    /// </summary> 
     [HttpDelete("All")]
     public async Task<IActionResult> DeleteAllMovies()
     {

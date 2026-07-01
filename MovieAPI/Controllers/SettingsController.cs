@@ -14,7 +14,9 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class SettingsController(IMovieService repository, IMapper mapper) : ControllerBase
 {
-    // GET: api/Settings
+    ///<summary>
+    /// Get all settings
+    /// </summary> 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SettingDTO>>> GetSettings()
     {
@@ -23,7 +25,9 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
         return Ok(mapper.Map<IEnumerable<SettingDTO>>(settings));
     }
 
-    // GET: api/Settings/5
+    ///<summary>
+    /// Get a specific setting by id
+    /// </summary> 
     [HttpGet("{settingId:int}")]
     public async Task<ActionResult<SettingDTO>> GetSetting(int settingId)
     {
@@ -37,8 +41,9 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
         return Ok(mapper.Map<SettingDTO>(settingEntity));
     }
 
-    // PUT: api/Movies/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    ///<summary>
+    /// Update a setting by Id
+    /// </summary> 
     [HttpPut("{settingId:int}")]
     public async Task<IActionResult> UpdateSetting(int settingId, SettingUpdateDTO setting)
     {
@@ -55,7 +60,9 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
         return NoContent();
     }
 
-    // POST: api/Settings
+    ///<summary>
+    /// Create a new setting
+    /// </summary> 
     [HttpPost]
     public async Task<ActionResult<SettingDTO>> CreateSetting(SettingCreateDTO settingToCreate)
     {
@@ -67,7 +74,10 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
         SettingDTO createdSettingDto = mapper.Map<SettingDTO>(setting);
         return CreatedAtAction("GetSetting", new { settingId = createdSettingDto.Id }, createdSettingDto);
     }
-
+    
+    ///<summary>
+    /// Partially update a setting by Id
+    /// </summary> 
     [HttpPatch("{settingId:int}")]
     public async Task<ActionResult> PartiallyUpdateSetting(int settingId, [FromBody] JsonPatchDocument<SettingUpdateDTO> patchDocument)
     {
@@ -96,7 +106,9 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
         return NoContent();
     }
 
-    // DELETE: api/Settings/5
+    ///<summary>
+    /// Delete a setting by id
+    /// </summary> 
     [HttpDelete("{settingId:int}")]
     public async Task<IActionResult> DeleteSetting(int settingId)
     {
@@ -112,7 +124,9 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
 
         return NoContent();
     }
-    
+    ///<summary>
+    /// Delete all settings
+    /// </summary> 
     [HttpDelete("All")]
     public async Task<IActionResult> DeleteAllSettings()
     {
@@ -126,7 +140,10 @@ public class SettingsController(IMovieService repository, IMapper mapper) : Cont
 
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Add a setting to a movie (fix later)
+    /// </summary> 
     [HttpPost("{movieId:int}/settings")]
     public async Task<IActionResult> AddSettingsToMovie(int movieId, List<int> settingIds)
     {

@@ -10,6 +10,9 @@ namespace MovieAPI.Controllers;
 [Route("api/[controller]")]
 public class AuthController(IConfiguration configuration) : ControllerBase
 {
+    ///<summary>
+    /// Login so you can use Seedcontroller methods
+    /// </summary> 
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginModel model)
     {

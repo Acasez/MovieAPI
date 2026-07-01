@@ -14,6 +14,9 @@ namespace MovieAPI.Controllers;
 [ApiController]
 public class GenresController(IMovieService repository, IMapper mapper) : ControllerBase
 {
+    ///<summary>
+    /// Get all genres
+    /// </summary> 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GenreDTO>>> GetGenres()
     {
@@ -21,7 +24,10 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
 
         return Ok(mapper.Map<IEnumerable<GenreDTO>>(genres));
     }
-
+    
+    ///<summary>
+    /// Get a genre
+    /// </summary> 
     [HttpGet("{genreId:int}")]
     public async Task<ActionResult<GenreDTO>> GetGenre(int genreId)
     {
@@ -35,8 +41,11 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return Ok(mapper.Map<GenreDTO>(genreEntity));
     }
     
+    ///<summary>
+    /// Get a genre by name
+    /// </summary> 
     [HttpGet("{genreName}")]
-    public async Task<ActionResult<GenreDTO>> GetGenreByNameAsync(string genreName)
+    public async Task<ActionResult<GenreDTO>> GetGenreByName(string genreName)
     {
         Genre? genreEntity = await repository.GetGenreAsync(genreName);
 
@@ -47,7 +56,10 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
 
         return Ok(mapper.Map<GenreDTO>(genreEntity));
     }
-
+    
+    ///<summary>
+    /// Update a genre
+    /// </summary> 
     [HttpPut("{genreId:int}")]
     public async Task<IActionResult> UpdateGenre(int genreId, GenreUpdateDTO genre)
     {
@@ -63,7 +75,10 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
 
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Create a genre
+    /// </summary> 
     [HttpPost]
     public async Task<ActionResult<GenreDTO>> CreateGenre(GenreCreateDTO genreToCreate)
     {
@@ -75,7 +90,10 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         GenreDTO createdGenreDto = mapper.Map<GenreDTO>(genre);
         return CreatedAtAction("GetGenre", new { genreId = createdGenreDto.Id }, createdGenreDto);
     }
-
+    
+    ///<summary>
+    /// Partially update a genre
+    /// </summary> 
     [HttpPatch("{genreId:int}")]
     public async Task<ActionResult> PartiallyUpdateGenre(int genreId, [FromBody] JsonPatchDocument<GenreUpdateDTO> patchDocument)
     {
@@ -103,7 +121,10 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         await repository.SaveChangesAsync();
         return NoContent();
     }
-
+    
+    ///<summary>
+    /// Delete a genre
+    /// </summary> 
     [HttpDelete("{genreId:int}")]
     public async Task<IActionResult> DeleteGenre(int genreId)
     {
@@ -120,6 +141,9 @@ public class GenresController(IMovieService repository, IMapper mapper) : Contro
         return NoContent();
     }
     
+    ///<summary>
+    /// Delete all genres
+    /// </summary> 
     [HttpDelete("All")]
     public async Task<IActionResult> DeleteAllGenres()
     {
