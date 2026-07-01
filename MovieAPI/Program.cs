@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +31,10 @@ builder.Services.AddControllers()
 
 builder.Services.AddSwaggerGen(options =>
 {
-    // 1. Detta är oförändrat och definierar Bearer-knappen
+    string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+    
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -41,7 +45,6 @@ builder.Services.AddSwaggerGen(options =>
         Description = "JWT-1234567890abcdefghijklmnopqrstuvxz"
     });
 
-    // 2. DETTA ÄR NYTT FÖR .NET 10: Vi använder en lambda-funktion med det nya schemareferensobjektet
     options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         [new OpenApiSecuritySchemeReference("Bearer", document)] = []
